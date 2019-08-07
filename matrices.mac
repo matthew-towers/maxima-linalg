@@ -7,8 +7,10 @@ https://rosettacode.org/wiki/Reduced_row_echelon_form#Maxima
 isrref(a) := is(a = rref(a));
 
 /* return true if the matrix a is diagonal, otherwise false */
-isdiag(a) := block(li : makelist(a[i][i], i, 1, min(matrix_size(a)[1],
-matrix_size(a)[2])), is(a = apply(diag_matrix, li)));
+isdiag(a) := block(
+    li : makelist(a[i][i], i, 1, min(matrix_size(a)[1], matrix_size(a)[2])),
+    is(a = apply(diag_matrix, li))
+);
 
 /* row ops */
 
@@ -23,35 +25,52 @@ mu(a,i,l) := block(a[i] : l * a[i]);
 
 /* isLI(v1, v2, ...) is true if the vectors vi are linearly independent,
  * otherwise false */
-isLI([vecs]) := block(n : length(vecs), m : apply(addcol, vecs), is(n =
-rank(m)));
+isLI([vecs]) := block(
+    n : length(vecs),
+    m : apply(addcol, vecs),
+    is(n = rank(m))
+);
 
 /* we represent a subspace by matrix whose columns are a spanning set
  * for the subspace. */
 
+/* dim is an alias for rank */
+dim(a) := rank(a);
+
 /* are the subspaces rep by a and b equal? */
-equal_subspaces(a,b) := block(ra : rank(a), rb : rank(b), rab :
-rank(mat_unblocker(matrix([a,b]))), is(ra = rb and ra = rab)  );
+equal_subspaces(a,b) := block(
+    if (matrix_size(a)[1] # matrix_size(b)[1])
+        then return(false),
+    ra : rank(a),
+    rb : rank(b),
+    rab : rank(mat_unblocker(matrix([a,b]))),
+    is(ra = rb and ra = rab)
+);
 
 /* return a matrix whose cols are a basis for the subspace rep by a,
  * unless a is the zero matrix in which case return a column
  * of zeroes.  */
 refine(a) := block(
-if (a = zeromatrix(matrix_size(a)[1], matrix_size(a)[2])) then
-return (zeromatrix(matrix_size(a)[1], 1)), 
-s : args(columnspace(a)),
-apply(addcol, s)  );
+    if (a = zeromatrix(matrix_size(a)[1], matrix_size(a)[2]))
+        then return (zeromatrix(matrix_size(a)[1], 1)), 
+    s : args(columnspace(a)),
+    apply(addcol, s)
+);
 
 /* compute transpose(a).a and wrap the result as a matrix if necessary - 
  * maxima converts 1x1 matrices to numbers, we don't want this */
 safeAtA(a) := block(
-if (matrix_size(a)[2] = 1) then return(matrix([transpose(a).a])), transpose(a)
-. a);
+    if (matrix_size(a)[2] = 1)
+        then return(matrix([transpose(a).a])),
+    transpose(a). a
+);
 
 /* create orthogonal projection onto col space of a matrix a whose
  * columns are assumed linearly independent */
-proj(a) := block(aa : refine(a), aa . invert(safeAtA(aa)) .
-transpose(aa));
+proj(a) := block(
+    aa : refine(a),
+    aa . invert(safeAtA(aa)) . transpose(aa)
+);
 
 /* is the column space as big as possible? */
 spansWholeSpace(a) := is(rank(a) = matrix_size(a)[1]);
@@ -81,14 +100,14 @@ sum_subspacesMX(a,b) := mat_unblocker(matrix([a,b]));
  * [ B^T ]
  */
 intersect_subspacesMX(a,b) := block(
-if spansWholeSpace(a)
-    then return (b)
-else if spansWholeSpace(b)
-    then return (a),
-x : kerMX(transpose(a)),
-y : kerMX(transpose(b)),
-z : mat_unblocker(matrix([transpose(x)], [transpose(y)])),
-kerMX(z)
+    if spansWholeSpace(a)
+        then return (b)
+    else if spansWholeSpace(b)
+        then return (a),
+    x : kerMX(transpose(a)),
+    y : kerMX(transpose(b)),
+    z : mat_unblocker(matrix([transpose(x)], [transpose(y)])),
+    kerMX(z)
 );
 
 /* is this vector v in this subspace a? */

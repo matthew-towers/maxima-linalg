@@ -15,14 +15,17 @@ Code](https://rosettacode.org/wiki/Reduced_row_echelon_form#Maxima
  - `isLI(v1, v2, ...)` is true iff `v1, v2,...` are linearly
    independent.
 
-Subspaces $U$ are represented by matrices whose column space is $U$.
+Subspaces U are represented by matrices whose column space is U. A good
+convention is that matrices named with capitals represent subspaces and
+matrices named in lower case are just matrices.
 
- - `equal_subspaces(a,b)` is true iff `a` and `b` represent the same
+ - `dim` is an alias for the maxima command `rank`
+ - `equal_subspaces(A,B)` is true iff `A` and `B` represent the same
    subspace
  - `proj(a)` is orthogonal projection onto the column space of `a`
  - `kerMX(a)` represents the kernel of the matrix `a`
- - `sum_subspaces(a,b)` represents the subspace sum
- - `intersect_subspaces(a,b)` represents $a \cap b$
- - `inn(v, a)` is true iff $v \in a$
+ - `sum_subspaces(A,B)` represents the subspace sum
+ - `intersect_subspaces(A,B)` represents `A ∩ B`
+ - `inn(v, A)` is true iff `v` is in `A`
 
 
