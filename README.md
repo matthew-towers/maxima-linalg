@@ -1,11 +1,16 @@
 # maxima-linalg
 
 Some functions for working with matrices and subspaces in
-[Maxima](http://maxima.sourceforge.net/) aimed at use with
-[STACK](https://www.ed.ac.uk/maths/stack). For the row reduced echelon
-form function, see [Rosetta
+[Maxima](http://maxima.sourceforge.net/). The intended use is in 
+[STACK](https://www.ed.ac.uk/maths/stack) questions, so each 
+multiline function is followed by a comment containing a version with no formatting whitespace suitable for pasting into the STACK editor.
+
+For the row reduced echelon form function, see [Rosetta
 Code](https://rosettacode.org/wiki/Reduced_row_echelon_form#Maxima
-).
+). If you want to use it in STACK, you'll have to change `return ()` to
+`return ( )`.
+
+## Functions
 
  - `isrref(a)` is true iff `a` is in row reduced echelon form
  - `isdiag(a)` is true iff `a` is diagonal.
@@ -26,6 +31,5 @@ matrices named in lower case are just matrices.
  - `kerMX(a)` represents the kernel of the matrix `a`
  - `sum_subspaces(A,B)` represents the subspace sum
  - `intersect_subspaces(A,B)` represents `A ∩ B`
- - `inn(v, A)` is true iff `v` is in `A`
-
+ - `inn(v, A)` is true iff `v` is in (the subspace rep by) `A`
 
