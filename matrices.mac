@@ -1,23 +1,106 @@
+/* does the matrix have an all-zero row? Return the index of the highest
+ * one if it exists, and -1 if there's no zero row */
+
+hasZeroRow(a) := block([width, height, i, output],
+    height : matrix_size(a)[1],
+    width : matrix_size(a)[2],
+    output : -1,
+    for i thru height do (
+        if (apply('matrix, [a[i]]) = zeromatrix(1, width)) 
+            then (output : i, return())),
+    output
+);
+/*
+hasZeroRow(a) := block([width, height, i, output], height : matrix_size(a)[1], width : matrix_size(a)[2], output : -1, for i thru height do ( if (apply('matrix, [a[i]]) = zeromatrix(1, width)) then (output : i, return())), output);
+*/
+
+/* returns true if there is a zero row with a nonzero row below it,
+ * otherwise false */
+
+zeroRowsNotAllAtBottom(a) := block([zr, sm, i],
+    zr : hasZeroRow(a),
+    if (zr = -1) then return(false),
+    sm : apply(submatrix, append(makelist(i, i, 1, zr - 1), [a])),
+    return(not is(sm = zeromatrix(matrix_size(sm)[1], matrix_size(sm)[2])))
+);
+/*
+zeroRowsNotAllAtBottom(a) := block([zr, sm, i], zr : hasZeroRow(a), if (zr = -1) then return(false), sm : apply(submatrix, append(makelist(i, i, 1, zr - 1), [a])), return(not is(sm = zeromatrix(matrix_size(sm)[1], matrix_size(sm)[2]))));
+*/
+
+
+/* return the coordinates of a non-1 leading entry, or [-1, -1]
+ * if none exists */
+
+nonOneLeadingEntry(a) := block([height, i, c, output],
+    height : matrix_size(a)[1],
+    output : [-1, -1],
+    for i thru height do (
+        c : columnOfLeadingEntry(a, i),
+        if ((c # -1) and (a[i][c] # 1)) then (output : [i, c], return())),
+    output
+);
+/*
+nonOneLeadingEntry(a) := block([height, i, c, output], height : matrix_size(a)[1], output : [-1, -1], for i thru height do ( c : columnOfLeadingEntry(a, i), if ((c # -1) and (a[i][c] # 1)) then (output : [i, c], return())), output);
+*/
+
+/* returns the coordinates of a leading entry such that there is a
+ * nonzero entry somewhere else in its column if such a leading entry
+ * exists, otherwise returns [-1, -1] */
+
+nonZeroEntryInColumnOfLeadingEntry(a) := block([height,output, i, ii, c],
+    height : matrix_size(a)[1],
+    output : [-1, -1],
+    for i thru height do (
+        c : columnOfLeadingEntry(a, i),
+        if (c # -1) then (
+            for ii thru height do (
+                if ((ii # i) and (a[ii][c] # 0)) then (output : [i, c], return())))),
+    output
+);
+/*
+nonZeroEntryInColumnOfLeadingEntry(a) := block([height,output, i, ii, c], height : matrix_size(a)[1], output : [-1, -1], for i thru height do ( c : columnOfLeadingEntry(a, i), if (c # -1) then ( for ii thru height do ( if ((ii # i) and (a[ii][c] # 0)) then (output : [i, c], return())))), output);
+*/
+
+/* return [i, j] such that i < j and the leading entry in row j is not
+ * strictly to the right of the leading entry in row i, if such a pair
+ * exists, otherwise return [-1, -1] */
+
+badLeadingEntryPositions(a) := block([height, i, c, ii, output, cc],
+    height : matrix_size(a)[1],
+    output : [-1, -1],
+    for i thru (height - 1) do (
+        c : columnOfLeadingEntry(a, i),
+        if (c # -1) then (
+            for ii : (i + 1) while ii <= height do (
+                cc : columnOfLeadingEntry(a, ii),
+                if ((cc # -1) and (cc <= c)) then
+                    (output : [i, ii], return())))),
+    output
+    );
+/*
+badLeadingEntryPositions(a) := block([height, i, c, ii, output, cc], height : matrix_size(a)[1], output : [-1, -1], for i thru (height - 1) do ( c : columnOfLeadingEntry(a, i), if (c # -1) then ( for ii : (i + 1) while ii <= height do ( cc : columnOfLeadingEntry(a, ii), if ((cc # -1) and (cc <= c)) then (output : [i, ii], return())))), output);
+*/
+
 /* return the first column of a with a nonzero entry in row i if this exists,
- * othewise -1 */
-leadingEntry(a, i) := block([q,l],
-    q:matrix_size(a)[2],
+ * otherwise -1 */
+columnOfLeadingEntry(a, i) := block([q, l],
+    q : matrix_size(a)[2],
     l : -1,
     for j thru q do (
-        if not(a[i,j] = 0) then (l : j, return())
+        if not(a[i, j] = 0) then (l : j, return())
         ),
     l
 );
 /*
-leadingEntry(a, i) := block([q,l], q:matrix_size(a)[2], l : -1, for j thru q do (if not(a[i,j] = 0) then (l : j, return())), l);
+columnOfLeadingEntry(a, i) := block([q,l], q:matrix_size(a)[2], l : -1, for j thru q do (if not(a[i,j] = 0) then (l : j, return())), l);
 */
 
 /* compute the row reduced echelon form of a */
 rref(a) := block([p, l],
-    p:matrix_size(a)[1],
+    p : matrix_size(a)[1],
     a : echelon(a),
     for i : 2 thru p do
-        (l : leadingEntry(a,i),
+        (l : columnOfLeadingEntry(a,i),
         if l > 0 then (
             for j thru i - 1 do
                 a : rowop(a, j, i, a[j, l])
@@ -26,7 +109,7 @@ rref(a) := block([p, l],
     a
 );
 /*
-rref(a) := block([p, l], p:matrix_size(a)[1], a : echelon(a), for i : 2 thru p do (l : leadingEntry(a,i), if l > 0 then (for j thru i - 1 do a : rowop(a, j, i, a[j, l]))), a);
+rref(a) := block([p, l], p:matrix_size(a)[1], a : echelon(a), for i : 2 thru p do (l : columnOfLeadingEntry(a,i), if l > 0 then (for j thru i - 1 do a : rowop(a, j, i, a[j, l]))), a);
 */
 
  
@@ -170,3 +253,4 @@ intersect_subspacesMX(a,b) := block([x, y, z], if spansWholeSpace(a) then return
 
 /* is this vector v in this subspace a? */
 inn(v, a) := is(rank(a) = rank(addcol(v,a)));
+

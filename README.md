@@ -7,7 +7,9 @@ multiline function is followed by a comment containing a version with no formatt
 
 ## Functions
 
- - `leadingEntry(a, i)` returns the column of `a` in which the left-most
+### Matrix and vector functions
+
+ - `columnOfLeadingEntry(a, i)` returns the column of `a` in which the left-most
    nonzero entry of row `i` appears if this exists, otherwise -1.
  - `rref(a)` returns the row reduced echelon form of `a`.
  - `isrref(a)` is true iff `a` is in row reduced echelon form.
@@ -20,6 +22,20 @@ multiline function is followed by a comment containing a version with no formatt
  - `iszeromx(a)` is true iff `a` has all entries zero.
  - `isevec(v,a)` is true iff `v` is an eigenvector of `a`. Assumes `a.v`
    makes sense and has the same size as `v`.
+
+There are functions for saying why a matrix is not in RREF:
+ - `zeroRowsNotAllAtBottom(a)` returns `true` if there is a zero row
+   with a nonzero row below it, otherwise `false`.
+ - `nonOneLeadingEntry(a)` returns the coordinates of a leading entry
+   which isn't equal to 1 if such an entry exists, otherwise `[-1, -1]`.
+ - `nonZeroEntryInColumnOfLeadingEntry(a)` returns the coordinates of a
+   leading entry which has a nonzero entry elsewhere in its column if
+   such a leading entry exists, otherwise returns `[-1, -1]`.
+ - `badLeadingEntryPositions(a)` returns `[i, j]` such that `i<j` but
+   the leading entry in row `j` is not to the right of that in row `i`,
+   if such a pair exists, otherwise returns `[-1, -1]`.
+
+### Vector space functions
 
 Subspaces U are represented by matrices whose column space is U. A good
 convention is that matrices named with capitals represent subspaces and
