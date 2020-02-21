@@ -83,7 +83,7 @@ badLeadingEntryPositions(a) := block([height, i, c, ii, output, cc], height : ma
 
 /* return the first column of a with a nonzero entry in row i if this exists,
  * otherwise -1 */
-columnOfLeadingEntry(a, i) := block([q, l],
+columnOfLeadingEntry(a, i) := block([q, l, j],
     q : matrix_size(a)[2],
     l : -1,
     for j thru q do (
@@ -96,7 +96,7 @@ columnOfLeadingEntry(a, i) := block([q,l], q:matrix_size(a)[2], l : -1, for j th
 */
 
 /* compute the row reduced echelon form of a */
-rref(a) := block([p, l],
+rref(a) := block([p, l, i, j],
     p : matrix_size(a)[1],
     a : echelon(a),
     for i : 2 thru p do
@@ -160,6 +160,12 @@ isLI([vecs]) := block([n,m], n : length(vecs), m : apply(addcol, vecs), is(n = r
 
 /* dim is an alias for rank */
 dim(a) := rank(a);
+
+/* create all of R^n */
+fullColumnSpaceOfDimension(n) := ident(n);
+
+/* create the zero subspace of R^n */
+zeroSubspace(n) := zeromatrix(n, 1);
 
 /* are the subspaces rep by a and b equal? */
 equal_subspaces(a,b) := block([ra, rb, rab],
@@ -254,3 +260,32 @@ intersect_subspacesMX(a,b) := block([x, y, z], if spansWholeSpace(a) then return
 /* is this vector v in this subspace a? */
 inn(v, a) := is(rank(a) = rank(addcol(v,a)));
 
+/* random permutation matrix */
+rpm(n) := block([z, l, p, i], 
+    z : zeromatrix(n,n),
+    l : makelist(i,i,1,n),
+    p : random_permutation(l),
+    for i : 1 thru n do 
+        z[i][p[i]] : 1,
+    z
+);
+/*
+rpm(n) := block([z, l, p, i], z : zeromatrix(n,n), l : makelist(i,i,1,n), p : random_permutation(l), for i : 1 thru n do z[i][p[i]] : 1, z);
+*/
+
+/* random lower unitriangular matrix with entries in -maxi...maxi */
+random_lut_mx(n, maxi) := block([id, i, j],
+    id : ident(n),
+    for i : 2 thru n do (
+        for j : 1 thru i-1 do (
+            id[i][j] : random(maxi + 1) * (-1)^random(2)
+            )
+        ),
+    id
+);
+/*
+random_lut_mx(n, maxi) := block([id, i, j], id : ident(n), for i : 2 thru n do ( for j : 1 thru i-1 do ( id[i][j] : random(maxi + 1) * (-1)^random(2))), id);
+*/
+
+/* random element of SL_n(Z) */
+random_slnz(n, maxi) := random_lut_mx(n, maxi) . rpm(n) . random_lut_mx(n, maxi);

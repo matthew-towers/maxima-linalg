@@ -3,27 +3,30 @@
 Some functions for working with matrices and subspaces in
 [Maxima](http://maxima.sourceforge.net/). The intended use is in 
 [STACK](https://www.ed.ac.uk/maths/stack) questions, so each 
-multiline function is followed by a comment containing a version with no formatting whitespace suitable for pasting into the STACK editor.
+multiline function is followed by a comment containing a version on a single line suitable for pasting into the STACK editor.
+
+Randomisation is not done the STACK way, you may want to change this if
+you're using these functions with STACK.
 
 ## Functions
 
 ### Matrix and vector functions
 
- - `columnOfLeadingEntry(a, i)` returns the column of `a` in which the left-most
-   nonzero entry of row `i` appears if this exists, otherwise -1.
+ - `columnOfLeadingEntry(a, i)` returns the column of `a` in which the left-most nonzero entry of row `i` appears if this exists, otherwise -1.
  - `rref(a)` returns the row reduced echelon form of `a`.
  - `isrref(a)` is true iff `a` is in row reduced echelon form.
  - `isdiag(a)` is true iff `a` is diagonal.
- - Row operations: `lij(a,l,i,j)` adds `l` times row `i` to row `j`,
-   `sw(a,i,j)` swaps rows `i` and `j`, `mu(a,i,l)` multiplies row `i` by
-   `l`.
- - `isLI(v1, v2, ...)` is true iff `v1, v2,...` are linearly
-   independent.
+ - Row operations: `lij(a,l,i,j)` adds `l` times row `i` to row `j`, `sw(a,i,j)` swaps rows `i` and `j`, `mu(a,i,l)` multiplies row `i` by `l`.
+ - `isLI(v1, v2, ...)` is true iff `v1, v2,...` are linearly independent.
  - `iszeromx(a)` is true iff `a` has all entries zero.
- - `isevec(v,a)` is true iff `v` is an eigenvector of `a`. Assumes `a.v`
-   makes sense and has the same size as `v`.
+ - `isevec(v,a)` is true iff `v` is an eigenvector of `a`. Assumes `a.v` makes sense and has the same size as `v`.
+ - `rpm(n)` returns a random permutation matrix of size n
+ - `random_lut_mx(n, maxi)` returns a lower unitriangular matrix with
+   entries randomly chosen between `-maxi` and `maxi` inclusive
+ - `random_slnz(n, maxi)` returns a random integer nxn matrix with
+   determinant 1 formed by `random_lut_mx(n, maxi) . rpm(n) . random_lut_mx(n, maxi)`
 
-There are functions for saying why a matrix is not in RREF:
+There are functions for determining why a matrix is not in RREF:
  - `zeroRowsNotAllAtBottom(a)` returns `true` if there is a zero row
    with a nonzero row below it, otherwise `false`.
  - `nonOneLeadingEntry(a)` returns the coordinates of a leading entry
@@ -49,4 +52,3 @@ matrices named in lower case are just matrices.
  - `sum_subspaces(A,B)` represents the subspace sum.
  - `intersect_subspaces(A,B)` represents `A ∩ B`.
  - `inn(v, A)` is true iff `v` is in (the subspace rep by) `A`.
-
