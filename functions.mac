@@ -1,0 +1,60 @@
+/* vim: ft=maxima
+*/
+/* assume f is a function represented as a list of values [f(1),f(2)...]
+ * and that f is 1-1 and its codomain is 1...N. Return a left-inverse to
+ * f represented the same way.
+ */
+leftInv(f, N) := block([i, li],
+    li : makelist(i, i, 1, N),
+    for i : 1 thru length(f) do (
+        li[f[i]] : i
+    ),
+    li
+);
+/*
+leftInv(f, N) := block([i, li], li : makelist(i, i, 1, N), for i : 1 thru length(f) do ( li[f[i]] : i), li);
+*/
+
+/* produce a different left inverse to f. Assumptions as in leftInv */
+differentLeftInv(f, N) := block([li, notEltf, cyc, notInImageOf_f, x, i],
+    li : leftInv(f, N),
+    notEltf(x) := not member(x, f),
+    notInImageOf_f : sublist(makelist(i, i, 1, N), notEltf),
+    cyc(x) := mod(x, N) + 1,
+    li[notInImageOf_f[1]] : cyc(li[notInImageOf_f[1]]),
+    li
+);
+/*
+differentLeftInv(f, N) := block([li, notEltf, cyc, notInImageOf_f, x, i], li : leftInv(f, N), notEltf(x) := not member(x, f), notInImageOf_f : sublist(makelist(i, i, 1, N), notEltf), cyc(x) := mod(x, N) + 1, li[notInImageOf_f[1]] : cyc(li[notInImageOf_f[1]]), li);
+*/
+
+/* why isn't g a left inverse to f? Return a number such that g(f(i)) \neq i, or
+ * 0 if no such number exists. */
+whyNotLinv(f, g, N) := block([x],
+    x : 0,
+    for i : 1 thru length(f) do (
+        if (not is(g[f[i]] = i)) then (x : i, return)
+    ),
+    x
+);
+/*
+whyNotLinv(f, g, N) := block([x], x : 0, for i : 1 thru length(f) do ( if (not is(g[f[i]] = i)) then (x : i, return)), x);
+*/
+
+/* check all the elements of a list are in cod. uses
+ * the STACK function all_listp */
+allInCod(g, cod) := block([x, ok],
+    ok(x) := member(x, cod),
+    all_listp(g, ok)
+);
+/*
+allInCod(g, cod) := block([x, ok], ok(x) := member(x, cod), all_listp(g, ok));
+*/
+allInCod2(g, cod) := block([i,x],
+    x : 0,
+    for i : 1 thru length(g) do (
+        if (not (member(g[i], cod))) then x : i
+    ),
+    x
+);
+

@@ -1,3 +1,5 @@
+/* vim: ft=maxima
+*/
 /* does the matrix have an all-zero row? Return the index of the highest
  * one if it exists, and -1 if there's no zero row */
 
@@ -180,9 +182,9 @@ equal_subspaces(a,b) := block([ra, rb, rab],
 equal_subspaces(a,b) := block([ra, rb, rab], if (matrix_size(a)[1] # matrix_size(b)[1]) then return(false), ra : rank(a), rb : rank(b), rab : rank(mat_unblocker(matrix([a,b]))), is(ra = rb and ra = rab));
 */
 
-/* return a matrix whose cols are a basis for the subspace rep by a,
- * unless a is the zero matrix in which case return a column
- * of zeroes.  */
+/* return a matrix whose columns are a basis for the subspace
+ * represented by a, unless a is the zero matrix in which case return a
+ * column of zeroes.  */
 refine(a) := block([s],
     if (a = zeromatrix(matrix_size(a)[1], matrix_size(a)[2]))
         then return (zeromatrix(matrix_size(a)[1], 1)), 
@@ -205,7 +207,7 @@ safeAtA(a) := block(if (matrix_size(a)[2] = 1) then return(matrix([transpose(a).
 */
 
 
-/* create orthogonal projection onto col space of a matrix a whose
+/* orthogonal projection onto column space of a matrix a whose
  * columns are assumed linearly independent */
 proj(a) := block([aa],
     aa : refine(a),
@@ -219,15 +221,15 @@ proj(a) := block([aa], aa : refine(a), aa . invert(safeAtA(aa)) . transpose(aa))
 /* is the column space as big as possible? */
 spansWholeSpace(a) := is(rank(a) = matrix_size(a)[1]);
 
-/* take a matrix, return mx rep of its kernel. Don't call this on
- * matrices with zero kernel */
+/* take a matrix, return matrix representation of its kernel. Don't call
+ * this on matrices with zero kernel */
 kerMX(a) := apply(addcol, args(nullspace(a)));
 
-/* take the matrix reps a and b of two subspaces A and B, return the
- * matrix rep of A \cap B */
+/* take the matrix representations a and b of two subspaces A and B,
+ * return the matrix rep of A \cap B */
 sum_subspacesMX(a,b) := mat_unblocker(matrix([a,b]));
 
-/* compute a matrix rep for the intersection of the subspaces
+/* compute a matrix representation for the intersection of the subspaces
  * represented by the matrices a and b. The idea is to use the fact that
  * the kernel of
  * [ X ]
