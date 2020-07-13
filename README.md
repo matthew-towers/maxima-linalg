@@ -1,6 +1,6 @@
 # maxima-linalg
 
-Some functions for working with functions, matrices and subspaces in
+Some functions for working with functions, permutations, matrices and subspaces in
 [Maxima](http://maxima.sourceforge.net/). The intended use is in 
 [STACK](https://www.ed.ac.uk/maths/stack) questions, so each 
 multiline function is followed by a comment containing a version on a single line suitable for pasting into the STACK editor.
@@ -9,6 +9,48 @@ Randomisation is not done the STACK way, you may want to change this if
 you're using these functions with STACK.
 
 ## Methods
+
+### Permutations
+Methods for working with permutations of sets 1..N represented either as
+lists `[s(1),...,s(N)]` (i.e. as the bottom row of two-row notation) or
+as lists of cycles, where the cycle `(a1,... an)` is represented as a
+list `[a1,...,an]`. There are built in maxima functions for working with
+permutations in the combinatorics package, but they're not enabled by
+default in a STACK maxima installation.
+- `cyclesTo2Row(cycs, N)` converts from a list of *disjoint* cycles to the two-row
+  rep
+- `cyclesTo2Row2(cycs, N)` converts from a list of possibly non-disjoint cycles to the two-row rep
+- `cycleTo2Row(cycle, N)` converts a cycle to its two-row rep as a
+  permutation of 1..N
+- `id_tworow(N)` returns the two-row rep of the identity permutation on
+  1..N
+- `foldr(list, fn, default)` is right fold
+- `twoRowToCycles(tworow)` converts from two-row to disjoint-cycle reps
+- `disjointCyclesp(cycs)` checks if the cycles in the list cycs are
+  disjoint
+- `cyclep(li, N)` checks if li is legitimate cycle on 1..N
+- `permAsCycsp(li, N)` checks if li is a list of legitimate cycles on
+  1..N
+- `order_dj_cycs(cycs)` returns the order of the permutation represented
+  by the list of *disjoint* cycles cycs
+- `order_tworow(tworow)` returns the order of the permutation tworow
+  given in two-row form
+- `inverseCycles(cycs)` returns the inverse of the permutation
+  represented by the list of possibly non-disjoint cycles cycs, again in
+  cycle form
+- `sgn_cycles(cycs)` returns the sign of the permutation represented by
+  the list of possibly non-disjoint cycles cycs
+- `sgn_tworow(tworow)` returns the sign of the permutation tworow given in
+  two-row notation
+- `compose_tworow(tr1, tr2)` composes the two permutations tr1 and tr2
+  given in two-row form
+- `compose_cycs(c1, c2, N)` composes the two permutations c1 and c2 of
+  1..N given as lists of possibly non-disjoint cycles
+- `power_tworow(tworow, n)` returns the nth power of the permutation
+  tworow in two-row form, for integer n
+- `cycles_to_transpositiosn(cycs)` converts a list of possibly
+  non-disjoint cycles to a list of transpositions whose product is the
+  same as the product of the original list
 
 ### Functions
 

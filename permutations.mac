@@ -1,0 +1,158 @@
+/* vim: ft=maxima
+*/
+
+/* given a permutation of N things as a list of disjoint cycles, convert
+ * it to (the bottom row of) the two-row rep */
+cyclesTo2Row(cycs, N) := block([output, i, j, cyc, f, nxt, current],
+    output : makelist(i, i, 1, N),
+    for i : 1 thru length(cycs) do (
+        cyc : cycs[i],
+        f : first(cyc),
+        current : first(cyc),
+        for j : 2 thru length(cyc) do (
+            nxt : cyc[j],
+            output[current] : nxt,
+            current : nxt
+        ),
+        output[current] : f
+    ),
+    output 
+); 
+
+/* given a single cycle as a list, return its two-row representation
+ */
+cycleTo2Row(cycle, N) := block([output],
+    output : makelist(i, i, 1, N),
+    for i : 1 thru length(cycle) - 1 do(
+        output[cycle[i]] : cycle[i + 1]
+        ),
+    output[last(cycle)] : first(cycle),
+    output
+);
+
+/* identity permutation of N letters in two-row notation */
+id_tworow(N) := makelist(i, i, 1, N);
+
+/* right fold */
+foldr(list, fn, default) := if length(list) =0 then default else fn(first(list), foldr(rest(list), fn, default));
+
+
+/* convert two-row notation to a list of disjoint cycles */
+twoRowToCycles(tworow) := block([unseen, i, output, count, cycle_start, dummy, current_cyc, current],
+    unseen : makelist(i, i, 1, length(tworow)),
+    output : [],
+    for count : 1 while length(unseen) > 0 do (
+        cycle_start : unseen[1],
+        unseen : delete(cycle_start, unseen),
+        current_cyc : [cycle_start],
+        current : cycle_start,
+        for dummy : 1 while (not is(tworow[current] = cycle_start)) do (
+            current : tworow[current],
+            unseen : delete(current, unseen),
+            current_cyc : append(current_cyc, [current])
+            ),
+        if length(current_cyc) > 1 then output : append(output, [current_cyc])
+        ),
+    output
+);
+
+/* is cycs, a list of cycles, disjoint? */
+disjointCyclesp(cycs) := block([lengths, sumlengths, sets, allelts],
+    lengths : maplist(length, cycs),
+    sumlengths : apply("+", lengths),
+    sets : maplist(setify, cycs),
+    allelts : apply(union, sets),
+    is(sumlengths = cardinality(allelts))
+);
+
+/* is li a legitimate cycle whose elements come from 1..N? */
+cyclep(li, N) := block([answer, i, valid, x, alldist, allvalid],
+    answer : false,
+    if listp(li) then (
+        validentries : makelist(i, i, 1, N),
+        valid(x) := member(x, validentries),
+        alldist : is(length(li) = cardinality(setify(li))),
+        allvalid : all_listp(li, valid),
+        answer : alldist and allvalid
+    ),
+    answer
+);
+    
+/* is li a legitimate permutation of 1..N given as a list of
+ * cycles?
+ */
+permAsCycsp(li, N) := block([answer, val],
+    answer : false,
+    if listp(li) then (
+        val(x) := iscyc(x, N),
+        answer : all_listp(li, val)
+        ),
+    answer
+);
+
+/* order of the permutation cycs given as a list of disjoint cycles */
+order_dj_cycs(cycs) := lcm(maplist(length, cycs));
+
+/* order of the permutation tworow given in two-row form */
+order_tworow(tworow) := order_dj_cycs(twoRowToCycles(tworow));
+
+/* inverse of the permutation cycs given as a list of possibly
+ * non-disjoint cycles, output in cycle form. If the input cycles are
+ * disjoint, so are the output cycles.
+ */
+inverseCycles(cycs) := reverse(maplist(reverse, cycs));
+
+/* inverse of the permutation tworow given in two-row form, output in
+ * two-row form
+ */
+inverseTwoRow(tworow) := cyclesTo2Row(inverseCycles(twoRowToCycles(tworow)), length(tworow));
+
+/* sign of the permutation cycs given as a list of possibly non-disjoint
+ * cycles
+ */
+sgn_cycles(cycs) := (-1) ** (length(cycs) + apply("+", maplist(length, cycs)));
+
+/* sign of the permutation tworow given in two-row form */
+sgn_tworow(tworow) := sgn_cycles(twoRowToCycles(tworow));
+
+/* compose the two permutations tr1 and tr2 given in two-row form,
+ * returning the result in two-row form
+ */
+compose_tworow(tr1, tr2) := makelist(tr1[tr2[i]], i, 1, length(tr1));
+
+/* convert any list of cycles, even if non-disjoint, to its two-row
+ * notation
+ */
+cyclesTo2Row2(cycs, N) := foldr(maplist(lambda([cyc], cycleTo2Row(cyc, N)), cycs), compose_tworow, id_tworow(N));
+
+/* compose the two permutations c1, c2 of N things, given as lists of
+ * disjoint cycles, outputting the result in disjoint cycle form
+ */
+compose_cycs(c1, c2, N) := twoRowToCycles(compose_tworow(cyclesTo2Row2(c1, N), cyclesTo2Row2(c2, N)));
+
+
+/* tworow ^ n, where n is nonnegative and tworow is the two-row rep of a
+ * perm
+ */
+nonneg_power_tworow(tworow, n) := foldr(makelist(tworow, i, 1, n), compose_tworow, id_tworow(length(tworow)));
+
+/* tworow^n, where n is an integer and tworow is the two-row rep of a
+ * perm
+ */
+power_tworow(tworow, n) := if n >= 0 then nonneg_power_tworow(tworow, n) else nonneg_power_tworow(inverseTwoRow(tworow), n);
+
+/* input: a cycle cyc. Output: a list of transpositions whose product is
+ * cyc.
+ */
+cycle_to_transpositions(cyc) := block([output],
+    output : [],
+    for i : 1 thru length(cyc) - 1 do (
+        output : append(output, [[cyc[i], cyc[i+1]]])
+        ),
+    output
+);
+
+/* convert a list of cycles to a list of transpositions whose product
+ * equals the product of the original list
+ */
+cycles_to_transpositions(cycs) := apply(append, maplist(cycle_to_transpositions, cycs));
