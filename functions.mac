@@ -58,3 +58,62 @@ allInCod2(g, cod) := block([i,x],
     x
 );
 
+
+/* random functions with specified injectivity/surjectivity */
+
+/* random nonsurjective noninjective function 1..n to 1..m, assuming m <= 3n-3 */
+randomNotOntoNotOneOne(domainsize, codomainsize) := block([i, notInImage, image, func, whereNotOneOne],
+    domainlist : makelist(i, i, 1, domainsize),
+    codomainlist : makelist(i, i, 1, codomainsize),
+    notInImage : rand(codomainlist),
+    image : delete(notInImage, codomainlist),
+    image : append(image, image, image),
+    func : rand_selection(image, domainsize),
+    whereNotOneOne : rand_selection(domainlist, 2),
+    func[whereNotOneOne[2]] : func[whereNotOneOne[1]],
+    func
+);
+
+/* random surjective noninjective function 1..domainsize to 
+ * 1..codomainsize, assuming domainsize > codomainsize
+ */
+randomOntoNotOneOne(domainsize, codomainsize) := block([i, gap, image, fn],
+    domainlist : makelist(i, i, 1, domainsize),
+    codomainlist : makelist(i, i, 1, codomainsize),
+    gap : domainsize - codomainsize,
+    image : codomainlist,
+    image : append(image, rand_selection(image, gap)),
+    fn : rand_selection(image, length(image)),
+    fn
+);
+
+
+/* random one-to-one not onto function 1..domainsize -> 1..codomainsize,
+ * assuming codomainsize > domainsize */
+randomOneOneNotOnto(domainsize, codomainsize) := block([domainlist, codomainlist, notInImage, codomainlistOneMissing, func],
+    domainlist: makelist(i, i, 1, domainsize),
+    codomainlist : makelist(i, i, 1, codomainsize),
+    notInImage : rand(codomainlist),
+    codomainlistOneMissing : delete(notInImage, codomainlist)
+    func : rand_selection(codomainlistOneMissing, length(codomainlistOneMissing)),
+    func
+);
+
+/* random bijection 1..n -> 1..n */
+randomBij(domainsize) := block([func, i, domainlist],
+    domainlist : makelist(i, i, 1, domainsize),
+    func : rand_selection(domainlist, domainsize),
+    func   
+);
+
+/* fn is a list, letter is a string, returns the string 
+ * letter(1) = fn[1], letter(2) = fn[2], ...,
+ */
+printfunc(fn, letter) := block([str, i],
+    str : "",
+    for i : 1 thru length(fn) - 1 do (
+        str : sconcat(output, letter, "(", i, ") = ", fn[i], ", ")
+    ),
+    str : sconcat(str, letter, "(", i, ") = ", fn[i]),
+    str
+);
