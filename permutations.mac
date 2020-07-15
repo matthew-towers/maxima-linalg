@@ -156,3 +156,39 @@ cycle_to_transpositions(cyc) := block([output],
  * equals the product of the original list
  */
 cycles_to_transpositions(cycs) := apply(append, maplist(cycle_to_transpositions, cycs));
+
+/* produce latex rep of this two-row perm */
+twoRowLaTeX(tworow) := block([n, str],
+    n : length(tworow),
+    str : "\\begin{pmatrix}",
+    for i : 1 thru n-1 do (
+        str : sconcat(str, i, "& ")
+        ),
+    str : sconcat(str, n, "\\\\"),
+    for i : 1 thru n-1 do (
+        str : sconcat(str, tworow[i], "& ")
+        ),
+    str : sconcat(str, tworow[n], "\\end{pmatrix}"),
+    str
+);
+
+/* produce latex rep of a cycle */
+cycleLaTeX(cyc) := block([i, str],
+    str : "(",
+    for i : 1 thru length(cyc) - 1 do (
+        str : sconcat(str, cyc[i], ", ")
+    ),
+    str : sconcat(str, last(cyc), ")"),
+    str
+);
+/* produce latex rep of this list of cycles */
+cyclesLaTeX(cycs) := block([str, i],
+    str : "",
+    for i : 1 thru length(cycs) do (
+        str : sconcat(str, cycleLaTeX(cycs[i]))
+        ),
+    str
+);
+
+/* generate a random perm in 2-row notation */
+randomPerm(n) := block([i], rand_selection(makelist(i, i, 1, n), n));
