@@ -1,6 +1,6 @@
 # maxima-linalg
 
-Some functions for working with functions, permutations, matrices and subspaces in
+Code for working with functions, permutations, matrices and subspaces in
 [Maxima](http://maxima.sourceforge.net/). The intended use is in 
 [STACK](https://www.ed.ac.uk/maths/stack) questions, so each 
 multiline function is followed by a comment containing a version on a single line suitable for pasting into the STACK editor.
