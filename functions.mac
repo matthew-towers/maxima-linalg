@@ -112,8 +112,8 @@ randomBij(domainsize) := block([func, i, domainlist],
 printfunc(fn, letter) := block([str, i],
     str : "",
     for i : 1 thru length(fn) - 1 do (
-        str : sconcat(output, letter, "(", i, ") = ", fn[i], ", ")
+        str : sconcat(str, letter, "(", i, ") = ", fn[i], ", ")
     ),
-    str : sconcat(str, letter, "(", i, ") = ", fn[i]),
+    str : sconcat(str, letter, "(", length(fn), ") = ", fn[length(fn)]),
     str
 );
