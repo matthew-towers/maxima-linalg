@@ -94,7 +94,7 @@ randomOneOneNotOnto(domainsize, codomainsize) := block([domainlist, codomainlist
     domainlist: makelist(i, i, 1, domainsize),
     codomainlist : makelist(i, i, 1, codomainsize),
     notInImage : rand(codomainlist),
-    codomainlistOneMissing : delete(notInImage, codomainlist)
+    codomainlistOneMissing : delete(notInImage, codomainlist),
     func : rand_selection(codomainlistOneMissing, length(codomainlistOneMissing)),
     func
 );

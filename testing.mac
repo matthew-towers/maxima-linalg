@@ -3,14 +3,14 @@
 
 /* generic unit tests */
 
-/* apply function to each element of inputs in turn. If the output isn't
+/* apply function to each list of arguments in inputs in turn. If the output isn't
  * equal to the corresponding element of outputs, display the input,
  * expected output, actual output
  */
-unittests(function, inputs, outputs) := block([i, actualOutput, expectedOutput, flag],
+unitTests(function, inputs, outputs) := block([i, actualOutput, expectedOutput, flag],
     flag : true,
     for i : 1 thru length(inputs) do (
-        actualOutput : function(inputs[i]),
+        actualOutput : apply(function, inputs[i]),
         expectedOutput : outputs[i],
         if actualOutput # expectedOutput then (
             flag : false,
@@ -21,9 +21,9 @@ unittests(function, inputs, outputs) := block([i, actualOutput, expectedOutput, 
 );
 
 /* example:
- * f(x) := x ** 2 ;
- * ip : [-1, 1, 2, 3];
- * op : [1, 1, 4, 8];
+ * f(x, y) := x + y ;
+ * ip : [[-1, 1], [1, 2], [2, 3]];
+ * op : [0, 3, 4, 8];
  * unittests(f, ip, op);
  * will print an error message because f(ip[3]) # op[3]
  */

@@ -66,13 +66,13 @@ disjointCyclesp(cycs) := block([lengths, sumlengths, sets, allelts],
 );
 
 /* is li a legitimate cycle whose elements come from 1..N? */
-cyclep(li, N) := block([answer, i, valid, x, alldist, allvalid],
+cyclep(li, N) := block([validentries, answer, i, valid, x, alldist, allvalid],
     answer : false,
     if listp(li) then (
         validentries : makelist(i, i, 1, N),
         valid(x) := member(x, validentries),
         alldist : is(length(li) = cardinality(setify(li))),
-        allvalid : all_listp(li, valid),
+        allvalid : all_listp(valid, li),
         answer : alldist and allvalid
     ),
     answer
@@ -85,7 +85,7 @@ permAsCycsp(li, N) := block([answer, val],
     answer : false,
     if listp(li) then (
         val(x) := iscyc(x, N),
-        answer : all_listp(li, val)
+        answer : all_listp(val, li)
         ),
     answer
 );
