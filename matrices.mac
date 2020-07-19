@@ -291,3 +291,52 @@ random_lut_mx(n, maxi) := block([id, i, j], id : ident(n), for i : 2 thru n do (
 
 /* random element of SL_n(Z) */
 random_slnz(n, maxi) := random_lut_mx(n, maxi) . rpm(n) . random_lut_mx(n, maxi);
+
+/* random mx of given size with integer entries from -a..a */
+rand_mx(nrows, ncols, a) := block([entries, z, i, j],
+    entries : makelist(i, i, -a, a),
+    z : zeromatrix(nrows, ncols),
+    for i : 1 thru nrows do (
+        for j : 1 thru ncols do (
+            z[i][j] : rand(entries)
+            )
+        ),
+    z
+);
+
+/* where does mx A differ from mx B?  return a list of coordinates where
+ * they differ e.g. [[1, 2], [5, 5]] */
+where_differ(A, B) := block([i, j, differs],
+    differs : [],
+    for i : 1 thru matrix_size(A)[1] do (
+        for j : 1 thru matrix_size(A)[2] do (
+            if not is(A[i][j] = B[i][j]) then (
+                differs : cons([i, j], differs)
+            )
+        )
+    ),
+    differs
+);
+
+/* convert output from where_differ to a printable string */
+differences_string(li) := block([output, i],
+    output : "",
+    for i : 1 thru length(li) - 1 do (
+        output : sconcat(output, "(", li[i][1], ", ", li[i][2], "), ")
+        ),
+    output: sconcat(output,"(", li[length(li)][1], ", ", li[length(li)][2], ")"),
+    output 
+);
+
+can_multiply(A, B) := is(matrix_size(A)[2] = matrix_size(B)[1]);
+
+/* produce a string showing how to calculate the correct value of the
+ * i,j entry of AB */
+work_out_product_entry(A, B, i, j) := block([output, k],
+    output : "",
+    for k : 1 thru matrix_size(A)[2] - 1 do(
+        output : sconcat(output, "(", A[i][k], "\\times ", B[k][j], ") + ")
+        ),
+    output : sconcat(output, "(", A[i][matrix_size(A)[2]], "\\times ", B[matrix_size(A)[2]][j], ")"),
+    output
+);
