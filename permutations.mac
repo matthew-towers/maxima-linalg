@@ -21,7 +21,7 @@ cyclesTo2Row(cycs, N) := block([output, i, j, cyc, f, nxt, current],
 
 /* given a single cycle as a list, return its two-row representation
  */
-cycleTo2Row(cycle, N) := block([output],
+cycleTo2Row(cycle, N) := block([output, i],
     output : makelist(i, i, 1, N),
     for i : 1 thru length(cycle) - 1 do(
         output[cycle[i]] : cycle[i + 1]
@@ -34,7 +34,7 @@ cycleTo2Row(cycle, N) := block([output],
 id_tworow(N) := makelist(i, i, 1, N);
 
 /* right fold */
-foldr(list, fn, default) := if length(list) =0 then default else fn(first(list), foldr(rest(list), fn, default));
+foldr(list, fn, default) := if length(list) = 0 then default else fn(first(list), foldr(rest(list), fn, default));
 
 
 /* convert two-row notation to a list of disjoint cycles */
@@ -144,10 +144,10 @@ power_tworow(tworow, n) := if n >= 0 then nonneg_power_tworow(tworow, n) else no
 /* input: a cycle cyc. Output: a list of transpositions whose product is
  * cyc.
  */
-cycle_to_transpositions(cyc) := block([output],
+cycle_to_transpositions(cyc) := block([output, i],
     output : [],
     for i : 1 thru length(cyc) - 1 do (
-        output : append(output, [[cyc[i], cyc[i+1]]])
+        output : append(output, [[cyc[i], cyc[i + 1]]])
         ),
     output
 );
@@ -158,7 +158,7 @@ cycle_to_transpositions(cyc) := block([output],
 cycles_to_transpositions(cycs) := apply(append, maplist(cycle_to_transpositions, cycs));
 
 /* produce latex rep of this two-row perm */
-twoRowLaTeX(tworow) := block([n, str],
+twoRowLaTeX(tworow) := block([n, str, i],
     n : length(tworow),
     str : "\\begin{pmatrix}",
     for i : 1 thru n-1 do (

@@ -2,11 +2,8 @@
 
 Code for working with functions, permutations, matrices and subspaces in
 [Maxima](http://maxima.sourceforge.net/). The intended use is in 
-[STACK](https://www.ed.ac.uk/maths/stack) questions, so each 
-multiline function is followed by a comment containing a version on a single line suitable for pasting into the STACK editor.
-
-Randomisation is not done the STACK way, you may want to change this if
-you're using these functions with STACK.
+[STACK](https://www.ed.ac.uk/maths/stack) questions, so STACK random
+functions are used - these won't work in an ordinary Maxima session.
 
 ## Methods
 
@@ -51,6 +48,10 @@ default in a STACK maxima installation.
 - `cycles_to_transpositiosn(cycs)` converts a list of possibly
   non-disjoint cycles to a list of transpositions whose product is the
   same as the product of the original list
+- `twoRowLaTeX(tworow)` produces a string consisting of a LaTeX
+  representation of the two-row notation for `tworow`
+- `cyclesLaTeX(cycs)` produces a string consisting of a LaTeX
+  representation of the list of disjoint cycles `cycs`
 
 ### Functions
 
@@ -67,7 +68,7 @@ corresponds to `[f(1), f(2), ..., f(M)]`.
 - `allInCod2(g, cod)` returns a number i such that g(i) is not an
   element of cod if such an i exists, otherwise 0.
 
-### Matrix and vector functions
+### Matrices and vectors
 
  - `columnOfLeadingEntry(a, i)` returns the column of `a` in which the left-most nonzero entry of row `i` appears if this exists, otherwise -1.
  - `rref(a)` returns the row reduced echelon form of `a`.
@@ -82,7 +83,13 @@ corresponds to `[f(1), f(2), ..., f(M)]`.
    entries randomly chosen between `-maxi` and `maxi` inclusive
  - `random_slnz(n, maxi)` returns a random integer nxn matrix with
    determinant 1 formed by `random_lut_mx(n, maxi) . rpm(n) . random_lut_mx(n, maxi)`
-
+ - `rand_mx_distinct(nrows, ncols)` returns a nrows by ncols matrix with
+   randomly chosen distinct entries.
+ - `rand_mx(nrows, ncols, a)` returns a nrows by ncols matrix with
+   random integer entries between `-a` and `a`
+ - `work_out_product_entry(A, B, i, j)` returns a LaTeX string showing
+   the calculation of the i, j entry of AB.
+ 
 There are functions for determining why a matrix is not in RREF:
  - `zeroRowsNotAllAtBottom(a)` returns `true` if there is a zero row
    with a nonzero row below it, otherwise `false`.
@@ -94,6 +101,8 @@ There are functions for determining why a matrix is not in RREF:
  - `badLeadingEntryPositions(a)` returns `[i, j]` such that `i < j` but
    the leading entry in row `j` is not to the right of that in row `i`,
    if such a pair exists, otherwise returns `[-1, -1]`.
+ - `why_not_rref(mx)` returns a string consisting of an html `<p>`
+   containing a `<ul>` whose items describe why `mx` is not in RREF.
 
 ### Vector space functions
 

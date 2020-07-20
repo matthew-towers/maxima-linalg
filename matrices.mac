@@ -12,9 +12,6 @@ hasZeroRow(a) := block([width, height, i, output],
             then (output : i, return())),
     output
 );
-/*
-hasZeroRow(a) := block([width, height, i, output], height : matrix_size(a)[1], width : matrix_size(a)[2], output : -1, for i thru height do ( if (apply('matrix, [a[i]]) = zeromatrix(1, width)) then (output : i, return())), output);
-*/
 
 /* returns true if there is a zero row with a nonzero row below it,
  * otherwise false */
@@ -25,9 +22,6 @@ zeroRowsNotAllAtBottom(a) := block([zr, sm, i],
     sm : apply(submatrix, append(makelist(i, i, 1, zr - 1), [a])),
     return(not is(sm = zeromatrix(matrix_size(sm)[1], matrix_size(sm)[2])))
 );
-/*
-zeroRowsNotAllAtBottom(a) := block([zr, sm, i], zr : hasZeroRow(a), if (zr = -1) then return(false), sm : apply(submatrix, append(makelist(i, i, 1, zr - 1), [a])), return(not is(sm = zeromatrix(matrix_size(sm)[1], matrix_size(sm)[2]))));
-*/
 
 
 /* return the coordinates of a non-1 leading entry, or [-1, -1]
@@ -38,12 +32,9 @@ nonOneLeadingEntry(a) := block([height, i, c, output],
     output : [-1, -1],
     for i thru height do (
         c : columnOfLeadingEntry(a, i),
-        if ((c # -1) and (a[i][c] # 1)) then (output : [i, c], return())),
+        if (not is(c = -1) and not is(a[i][c] = 1)) then (output : [i, c], return())),
     output
 );
-/*
-nonOneLeadingEntry(a) := block([height, i, c, output], height : matrix_size(a)[1], output : [-1, -1], for i thru height do ( c : columnOfLeadingEntry(a, i), if ((c # -1) and (a[i][c] # 1)) then (output : [i, c], return())), output);
-*/
 
 /* returns the coordinates of a leading entry such that there is a
  * nonzero entry somewhere else in its column if such a leading entry
@@ -54,17 +45,14 @@ nonZeroEntryInColumnOfLeadingEntry(a) := block([height,output, i, ii, c],
     output : [-1, -1],
     for i thru height do (
         c : columnOfLeadingEntry(a, i),
-        if (c # -1) then (
+        if not is(c = -1) then (
             for ii thru height do (
-                if ((ii # i) and (a[ii][c] # 0)) then (output : [i, c], return())))),
+                if (not is(ii = i) and not is(a[ii][c] = 0)) then (output : [i, c], return())))),
     output
 );
-/*
-nonZeroEntryInColumnOfLeadingEntry(a) := block([height,output, i, ii, c], height : matrix_size(a)[1], output : [-1, -1], for i thru height do ( c : columnOfLeadingEntry(a, i), if (c # -1) then ( for ii thru height do ( if ((ii # i) and (a[ii][c] # 0)) then (output : [i, c], return())))), output);
-*/
 
-/* return [i, j] such that i < j and the leading entry in row j is not
- * strictly to the right of the leading entry in row i, if such a pair
+/* return [i, j] such that i < j and the leading entry in row j is 
+ * to the left of the leading entry in row i, if such a pair
  * exists, otherwise return [-1, -1] */
 
 badLeadingEntryPositions(a) := block([height, i, c, ii, output, cc],
@@ -72,16 +60,13 @@ badLeadingEntryPositions(a) := block([height, i, c, ii, output, cc],
     output : [-1, -1],
     for i thru (height - 1) do (
         c : columnOfLeadingEntry(a, i),
-        if (c # -1) then (
+        if not is(c = -1) then (
             for ii : (i + 1) while ii <= height do (
                 cc : columnOfLeadingEntry(a, ii),
-                if ((cc # -1) and (cc <= c)) then
+                if (not is(cc = -1) and (cc < c)) then
                     (output : [i, ii], return())))),
     output
     );
-/*
-badLeadingEntryPositions(a) := block([height, i, c, ii, output, cc], height : matrix_size(a)[1], output : [-1, -1], for i thru (height - 1) do ( c : columnOfLeadingEntry(a, i), if (c # -1) then ( for ii : (i + 1) while ii <= height do ( cc : columnOfLeadingEntry(a, ii), if ((cc # -1) and (cc <= c)) then (output : [i, ii], return())))), output);
-*/
 
 /* return the first column of a with a nonzero entry in row i if this exists,
  * otherwise -1 */
@@ -93,9 +78,6 @@ columnOfLeadingEntry(a, i) := block([q, l, j],
         ),
     l
 );
-/*
-columnOfLeadingEntry(a, i) := block([q,l], q:matrix_size(a)[2], l : -1, for j thru q do (if not(a[i,j] = 0) then (l : j, return())), l);
-*/
 
 /* compute the row reduced echelon form of a */
 rref(a) := block([p, l, i, j],
@@ -110,23 +92,39 @@ rref(a) := block([p, l, i, j],
         ),
     a
 );
-/*
-rref(a) := block([p, l], p:matrix_size(a)[1], a : echelon(a), for i : 2 thru p do (l : columnOfLeadingEntry(a,i), if l > 0 then (for j thru i - 1 do a : rowop(a, j, i, a[j, l]))), a);
-*/
 
  
 /* return true if the matrix a is in row reduced echelon form, otherwise
  * false */
 isrref(a) := is(a = rref(a));
 
+/* return a string consisting of an HTML<p> containing a <ul> describing why the input matrix is not in RREF */
+why_not_rref(mx) := block([mzr, whynot, ble, badLEcol, blep],
+    mzr : zeroRowsNotAllAtBottom(mx),
+
+    whynot : "<p><ul>",
+    if mzr then whynot : sconcat(whynot, "<li>Your matrix has a row of zeroes which is not at the bottom. Any zero rows of a RREF must be at the bottom. </li>"),
+
+    ble : nonOneLeadingEntry(mx),
+    if not (is(ble = [-1, -1])) then whynot : sconcat(whynot, "<li>Your matrix has a leading entry at position ", bad_leading_entry[1], ", ", bad_leading_entry[2], " which isn't equal to 1. In a RREF matrix all leading entries must be 1. </li>"),
+
+    badLEcol : nonZeroEntryInColumnOfLeadingEntry(mx),
+    if not is(badLEcol = [-1, -1]) then whynot : sconcat(whynot, "<li>Your matrix has a leading entry in position ", badLEcol[1], ", ", badLEcol[2], " and there is another nonzero entry in the same column. In a RREF matrix, if a column contains a leading entry, every other entry in that column must be zero. </li>"),
+
+    blep : badLeadingEntryPositions(mx),
+
+    if not is(blep = [-1, -1]) then whynot : sconcat(whynot, "<li>Your matrix has leading entries in row ", blep[1], " and row ", blep[2], ".  The leading entry in row ", blep[2], " is to the left of the leading entry in row ", blep[1], ".  In a RREF matrix, if rows i and j have leading entries and i < j then the leading entry in row j must be to the right of the one in row i.</li>"),
+
+    whynot : sconcat(whynot, "</ul></p>"),
+    whynot
+);
+
+
 /* return true if the matrix a is diagonal, otherwise false */
 isdiag(a) := block([li, i],
     li : makelist(a[i][i], i, 1, min(matrix_size(a)[1], matrix_size(a)[2])),
     is(a = apply(diag_matrix, li))
 );
-/*
-isdiag(a) := block([li, i], li : makelist(a[i][i], i, 1, min(matrix_size(a)[1], matrix_size(a)[2])), is(a = apply(diag_matrix, li)));
-*/
 
 /* return true if all entries of a are zero */
 iszeromx(a) := is(a = zeromatrix(matrix_size(a)[1], matrix_size(a)[2]));
@@ -153,9 +151,6 @@ isLI([vecs]) := block([n,m],
     m : apply(addcol, vecs),
     is(n = rank(m))
 );
-/*
-isLI([vecs]) := block([n,m], n : length(vecs), m : apply(addcol, vecs), is(n = rank(m)));
-*/
 
 /* we represent a subspace by matrix whose columns are a spanning set
  * for the subspace. */
@@ -171,16 +166,13 @@ zeroSubspace(n) := zeromatrix(n, 1);
 
 /* are the subspaces rep by a and b equal? */
 equal_subspaces(a,b) := block([ra, rb, rab],
-    if (matrix_size(a)[1] # matrix_size(b)[1])
+    if not is(matrix_size(a)[1] = matrix_size(b)[1])
         then return(false),
     ra : rank(a),
     rb : rank(b),
     rab : rank(mat_unblocker(matrix([a,b]))),
     is(ra = rb and ra = rab)
 );
-/*
-equal_subspaces(a,b) := block([ra, rb, rab], if (matrix_size(a)[1] # matrix_size(b)[1]) then return(false), ra : rank(a), rb : rank(b), rab : rank(mat_unblocker(matrix([a,b]))), is(ra = rb and ra = rab));
-*/
 
 /* return a matrix whose columns are a basis for the subspace
  * represented by a, unless a is the zero matrix in which case return a
@@ -191,9 +183,6 @@ refine(a) := block([s],
     s : args(columnspace(a)),
     apply(addcol, s)
 );
-/*
-refine(a) := block([s], if (a = zeromatrix(matrix_size(a)[1], matrix_size(a)[2])) then return (zeromatrix(matrix_size(a)[1], 1)), s : args(columnspace(a)), apply(addcol, s));
-*/
 
 /* compute transpose(a).a and wrap the result as a matrix if necessary - 
  * maxima converts 1x1 matrices to numbers, we don't want this */
@@ -202,9 +191,6 @@ safeAtA(a) := block(
         then return(matrix([transpose(a).a])),
     transpose(a). a
 );
-/*
-safeAtA(a) := block(if (matrix_size(a)[2] = 1) then return(matrix([transpose(a).a])), transpose(a). a);
-*/
 
 
 /* orthogonal projection onto column space of a matrix a whose
@@ -213,9 +199,6 @@ proj(a) := block([aa],
     aa : refine(a),
     aa . invert(safeAtA(aa)) . transpose(aa)
 );
-/*
-proj(a) := block([aa], aa : refine(a), aa . invert(safeAtA(aa)) . transpose(aa));
-*/
 
 
 /* is the column space as big as possible? */
@@ -255,9 +238,6 @@ intersect_subspacesMX(a,b) := block([x, y, z],
     z : mat_unblocker(matrix([transpose(x)], [transpose(y)])),
     kerMX(z)
 );
-/*
-intersect_subspacesMX(a,b) := block([x, y, z], if spansWholeSpace(a) then return (b) else if spansWholeSpace(b) then return (a), x : kerMX(transpose(a)), y : kerMX(transpose(b)), z : mat_unblocker(matrix([transpose(x)], [transpose(y)])), kerMX(z));
-*/
 
 /* is this vector v in this subspace a? */
 inn(v, a) := is(rank(a) = rank(addcol(v,a)));
@@ -266,28 +246,24 @@ inn(v, a) := is(rank(a) = rank(addcol(v,a)));
 rpm(n) := block([z, l, p, i], 
     z : zeromatrix(n,n),
     l : makelist(i,i,1,n),
-    p : random_permutation(l),
+    /* p : random_permutation(l), */
+    p : random_selection(l, n),
     for i : 1 thru n do 
         z[i][p[i]] : 1,
     z
 );
-/*
-rpm(n) := block([z, l, p, i], z : zeromatrix(n,n), l : makelist(i,i,1,n), p : random_permutation(l), for i : 1 thru n do z[i][p[i]] : 1, z);
-*/
 
 /* random lower unitriangular matrix with entries in -maxi...maxi */
 random_lut_mx(n, maxi) := block([id, i, j],
     id : ident(n),
     for i : 2 thru n do (
         for j : 1 thru i-1 do (
-            id[i][j] : random(maxi + 1) * (-1)^random(2)
+            /* id[i][j] : random(maxi + 1) * (-1)^random(2) */
+            id[i][j] : rand(maxi + 1) * (-1) ** rand(2)
             )
         ),
     id
 );
-/*
-random_lut_mx(n, maxi) := block([id, i, j], id : ident(n), for i : 2 thru n do ( for j : 1 thru i-1 do ( id[i][j] : random(maxi + 1) * (-1)^random(2))), id);
-*/
 
 /* random element of SL_n(Z) */
 random_slnz(n, maxi) := random_lut_mx(n, maxi) . rpm(n) . random_lut_mx(n, maxi);
@@ -304,6 +280,20 @@ rand_mx(nrows, ncols, a) := block([entries, z, i, j],
     z
 );
 
+/* random mx of given size with all entries distinct */
+rand_mx_distinct(nrows, ncols) := block([count, entries, z, i, j],
+    entries : makelist(i, i, -nrows*ncols, nrows*ncols),
+    entries : rand_selection(entries, nrows*ncols),
+    count : 1,
+    z : zeromatrix(nrows, ncols),
+    for i : 1 thru nrows do (
+        for j : 1 thru ncols do (
+            z[i][j] : entries[count],
+            count : count + 1
+            )
+        ),
+    z
+);
 /* where does mx A differ from mx B?  return a list of coordinates where
  * they differ e.g. [[1, 2], [5, 5]] */
 where_differ(A, B) := block([i, j, differs],
@@ -324,10 +314,11 @@ differences_string(li) := block([output, i],
     for i : 1 thru length(li) - 1 do (
         output : sconcat(output, "(", li[i][1], ", ", li[i][2], "), ")
         ),
-    output: sconcat(output,"(", li[length(li)][1], ", ", li[length(li)][2], ")"),
+    output : sconcat(output,"(", li[length(li)][1], ", ", li[length(li)][2], ")"),
     output 
 );
 
+/* does the matrix product AB make sense? */
 can_multiply(A, B) := is(matrix_size(A)[2] = matrix_size(B)[1]);
 
 /* produce a string showing how to calculate the correct value of the
