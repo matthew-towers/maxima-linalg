@@ -191,4 +191,4 @@ cyclesLaTeX(cycs) := block([str, i],
 );
 
 /* generate a random perm in 2-row notation */
-randomPerm(n) := block([i], rand_selection(makelist(i, i, 1, n), n));
+randomPerm(n) := rand_selection(makelist(i, i, 1, n), n);
