@@ -84,7 +84,7 @@ cyclep(li, N) := block([validentries, answer, i, valid, x, alldist, allvalid],
 permAsCycsp(li, N) := block([answer, val],
     answer : false,
     if listp(li) then (
-        val(x) := iscyc(x, N),
+        val(x) := cyclep(x, N),
         answer : all_listp(val, li)
         ),
     answer
