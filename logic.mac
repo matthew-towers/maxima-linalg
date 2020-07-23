@@ -1,0 +1,44 @@
+/* vim: ft=maxima
+*/
+
+/* generate a list of the 2^n different length n lists whose elements
+ * are true or false
+ */
+tf(n) := if n=0 then [[]] else append(maplist(lambda([x], cons(true, x)), tf(n-1)), maplist(lambda([x], cons(false, x)), tf(n-1)));
+
+/* prepare a list of the form [x=a, y=b, ...] where varlist = [x, y,
+ * ...] and vallist = [a, b, ...]
+ * in stack this is a zip, but we don't have zip in vanilla maxima
+ * zip_with(lambda([var, val], var = val),varlist,vallist)
+ */
+subst_list(varlist, vallist) := block([out, i],
+    out : [],
+    for i : 1 thru length(varlist) do (
+        out : cons(varlist[i] = vallist[i], out)
+    ),
+    out
+);
+
+/* given a boolean function fn of n vars and an expr ex1 in the
+ * variables vars, does the expression induce the same boolean function?
+ * return [is_equiv, list of counterexamples]
+ */
+log_equivp(ex, fn, vars) := block([is_equiv, counterex, n, tfs, i, subs],
+    is_equiv : true,
+    counterex : [],
+    n : length(vars),
+    tfs : tf(n),
+    for i : 1 thru length(tf(n)) do (
+        /* build the substitution */
+        subs : subst_list(vars, tfs[i]),
+        /* do the substitution */
+        bool : subst(subs, ex),
+        if not is(bool = apply(fn, tfs[i])) then (
+            /* they are not logically equiv, and tfs[i] witnesses this
+ * */
+            is_equiv : false,
+            counterex : cons(tfs[i], counterex)
+        ) 
+    ),
+    [is_equiv, counterex]
+);

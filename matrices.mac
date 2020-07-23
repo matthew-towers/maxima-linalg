@@ -247,7 +247,7 @@ rpm(n) := block([z, l, p, i],
     z : zeromatrix(n,n),
     l : makelist(i,i,1,n),
     /* p : random_permutation(l), */
-    p : random_selection(l, n),
+    p : rand_selection(l, n),
     for i : 1 thru n do 
         z[i][p[i]] : 1,
     z
