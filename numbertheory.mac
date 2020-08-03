@@ -1,0 +1,17 @@
+/* vim: ft=maxima
+*/
+
+/* return a string which is a latex rep of a computation of gcd(a,b) */
+gcd_calc(a, b) := block([q, r, output],
+    output : "\\begin{align*}",
+    while (b > 0) do (
+        r : mod(a, b),
+        q : (a - mod(a, b)) / b,
+        output : sconcat(output, a, " &= ", q, " \\times ", b),
+        if (r > 0) then output : sconcat(output, " + " , r, " \\\\ "),
+        a : b,
+        b : r
+    ),
+    output : sconcat(output, " \\end{align*}"),
+    output
+);

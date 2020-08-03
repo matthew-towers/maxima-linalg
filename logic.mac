@@ -4,12 +4,12 @@
 /* generate a list of the 2^n different length n lists whose elements
  * are true or false
  */
-tf(n) := if n=0 then [[]] else append(maplist(lambda([x], cons(true, x)), tf(n-1)), maplist(lambda([x], cons(false, x)), tf(n-1)));
+tf(n) := if n=0 then [[]] else append(maplist(lambda([x], cons(true, x)), tf(n - 1)), maplist(lambda([x], cons(false, x)), tf(n - 1)));
 
-/* prepare a list of the form [x=a, y=b, ...] where varlist = [x, y,
- * ...] and vallist = [a, b, ...]
- * in stack this is a zip, but we don't have zip in vanilla maxima
+/* prepare a list of the form [x=a, y=b, ...] where varlist = [x, y, ...] and vallist = [a, b, ...]
+ * in stack this is 
  * zip_with(lambda([var, val], var = val),varlist,vallist)
+ * but we don't have zip in vanilla maxima
  */
 subst_list(varlist, vallist) := block([out, i],
     out : [],
@@ -21,9 +21,9 @@ subst_list(varlist, vallist) := block([out, i],
 
 /* given a boolean function fn of n vars and an expr ex1 in the
  * variables vars, does the expression induce the same boolean function?
- * return [is_equiv, list of counterexamples]
+ * return [true or false, list of counterexamples]
  */
-log_equivp(ex, fn, vars) := block([is_equiv, counterex, n, tfs, i, subs],
+log_equiv(ex, fn, vars) := block([is_equiv, counterex, n, tfs, i, subs],
     is_equiv : true,
     counterex : [],
     n : length(vars),
@@ -34,8 +34,7 @@ log_equivp(ex, fn, vars) := block([is_equiv, counterex, n, tfs, i, subs],
         /* do the substitution */
         bool : subst(subs, ex),
         if not is(bool = apply(fn, tfs[i])) then (
-            /* they are not logically equiv, and tfs[i] witnesses this
- * */
+            /* they are not logically equiv, and tfs[i] witnesses this */
             is_equiv : false,
             counterex : cons(tfs[i], counterex)
         ) 
