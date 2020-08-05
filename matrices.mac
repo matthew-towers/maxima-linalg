@@ -331,3 +331,38 @@ work_out_product_entry(A, B, i, j) := block([output, k],
     output : sconcat(output, "(", A[i][matrix_size(A)[2]], "\\times ", B[matrix_size(A)[2]][j], ")"),
     output
 );
+
+/* return a random linear combination of the first r rows of A */
+random_lc(r, A, scale) := block([output, i],
+    output : makelist(0, i, 1, matrix_size(A)[2]),
+    for i : 1 thru r do (
+        output : output + rand_with_step(-scale, scale, 1) * A[i]
+        ),
+    output
+);
+
+/* produce a random m by n matrix with rank r, assumed <= min(m,n). maxi controls
+ * size of entries to some extent */
+random_with_rank(m, n, r, maxi) := block([],
+    larger : max(m, n),
+    smaller : min(m, n),
+    li : random_slnz(larger, maxi),
+    z : zeromatrix(smaller, larger), /* rows are easier to work with*/
+    /* put the first r rows of li into random positions in z, the
+     * eventual output matrix. They're LI, so this will guarantee rank at
+     * least r
+     */
+    row_order : rand_selection(makelist(i, i, 1, smaller), smaller),
+    for rw : 1 thru r do (
+        z[row_order[rw]] : li[rw]
+        ),
+    /* fill the rest of z up with linear combinations of the rows
+     * already added, guaranteeing the rank is exactly r
+     */
+    for rw : r+1 thru smaller do (
+        z[row_order[rw]] : random_lc(r, li, 3)
+        ),
+    if (m > smaller) then (z : transpose(z)),
+    z
+);
+

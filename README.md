@@ -1,6 +1,6 @@
 # maxima-linalg
 
-Code for working with functions, permutations, matrices and subspaces in
+Code for working with functions, permutations, logic, matrices and subspaces in
 [Maxima](http://maxima.sourceforge.net/). The intended use is in 
 [STACK](https://www.ed.ac.uk/maths/stack) questions, so STACK random
 functions are used - these won't work in an ordinary Maxima session.
@@ -103,6 +103,9 @@ There are functions for determining why a matrix is not in RREF:
    if such a pair exists, otherwise returns `[-1, -1]`.
  - `why_not_rref(mx)` returns a string consisting of an html `<p>`
    containing a `<ul>` whose items describe why `mx` is not in RREF.
+ - `random_with_rank(m, n, r, maxi)` returns a random m by n integer matrix with
+   rank r (assuming r is at most the minimum of m and n). `maxi` gives
+   rough control over how big the elements of the matrix are.
 
 ### Vector space functions
 
@@ -118,3 +121,13 @@ matrices named in lower case are just matrices.
  - `sum_subspaces(A, B)` represents the subspace sum.
  - `intersect_subspaces(A, B)` represents `A ∩ B`.
  - `inn(v, A)` is true iff `v` is in (the subspace rep by) `A`.
+
+### Logic
+
+- `log_equiv(ex, fn, vars)` ex is assumed to be a logical expression in
+  the variables in the list vars only, and fn is a boolean function with
+  arity the length of vars. Returns a list `[is_equiv, counterexamples]`
+  where `is_equiv` is a boolean which is true iff `ex` is logically
+  equivalent to `fn` and `counterexamples` is a list of the truth
+  assignments to `vars` that witness the failure of `ex` to be logically
+  equivalent to `fn`
