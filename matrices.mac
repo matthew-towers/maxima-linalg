@@ -343,7 +343,7 @@ random_lc(r, A, scale) := block([output, i],
 
 /* produce a random m by n matrix with rank r, assumed <= min(m,n). maxi controls
  * size of entries to some extent */
-random_with_rank(m, n, r, maxi) := block([],
+random_with_rank(m, n, r, maxi) := block([larger, smaller, li, z, rw, i, row_order],
     larger : max(m, n),
     smaller : min(m, n),
     li : random_slnz(larger, maxi),
