@@ -366,3 +366,34 @@ random_with_rank(m, n, r, maxi) := block([larger, smaller, li, z, rw, i, row_ord
     z
 );
 
+/* multiply a rational matrix mx by the lcm of the denominators of its
+ * entries, producing an integer matrix */
+clear_denoms(mx) := block([i, denoms],
+    denoms : [],
+    for i : 1 thru matrix_size(mx)[1] do (
+        for j : 1 thru matrix_size(mx)[2] do (
+            denoms : cons(denom(mx[i][j]), denoms)
+            )
+        ),
+    lcm(denoms) * mx
+);
+
+/* get an integer vector not in the column space of A. Assumes A is a
+ * rational matrix that doesn't have full rank */
+vector_not_in_image(A) := block([pA, pAc, basis_for_image_complement],
+    pA : proj(A),
+    pAc : ident(matrix_size(A)[1]) - pA,
+    basis_for_image_complement : clear_denoms(refine(pAc)),
+    basis_for_image_complement[1]   
+);
+
+/* get a small nonzero integer vector in the column space of A. maxi controls
+ * how small */
+small_vector_in_image(A, maxi) := block([pA, output, i],
+    pA : refine(proj(A)),
+    output : rand_with_prohib(-maxi, maxi, [0]) * col(pA, 1),
+    for i : 2 thru matrix_size(pA)[2] do (
+        output : output + rand_with_step(-maxi, maxi, 1) * col(pA, i)
+        ),
+    output
+);

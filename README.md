@@ -89,6 +89,15 @@ corresponds to `[f(1), f(2), ..., f(M)]`.
    random integer entries between `-a` and `a`
  - `work_out_product_entry(A, B, i, j)` returns a LaTeX string showing
    the calculation of the i, j entry of AB.
+ - `small_vector_in_image(A, maxi)` returns a vector in the column space
+   of the matrix `A`, with `maxi` controlling how big its entries are.
+ - `vector_not_in_image(A)` returns a vector not in the column space of
+   `A`.
+ - `clear_denoms(mx)` multiplies a rational matrix by the lcm of its
+   entries.
+ - `random_with_rank(m, n, r, maxi)` returns a random m by n integer matrix with
+   rank r (assuming r is at most the minimum of m and n). `maxi` gives
+   rough control over how big the elements of the matrix are.
  
 There are functions for determining why a matrix is not in RREF:
  - `zeroRowsNotAllAtBottom(a)` returns `true` if there is a zero row
@@ -103,9 +112,6 @@ There are functions for determining why a matrix is not in RREF:
    if such a pair exists, otherwise returns `[-1, -1]`.
  - `why_not_rref(mx)` returns a string consisting of an html `<p>`
    containing a `<ul>` whose items describe why `mx` is not in RREF.
- - `random_with_rank(m, n, r, maxi)` returns a random m by n integer matrix with
-   rank r (assuming r is at most the minimum of m and n). `maxi` gives
-   rough control over how big the elements of the matrix are.
 
 ### Vector space functions
 
