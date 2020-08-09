@@ -384,7 +384,7 @@ vector_not_in_image(A) := block([pA, pAc, basis_for_image_complement],
     pA : proj(A),
     pAc : ident(matrix_size(A)[1]) - pA,
     basis_for_image_complement : clear_denoms(refine(pAc)),
-    basis_for_image_complement[1]   
+    col(basis_for_image_complement, 1)
 );
 
 /* get a small nonzero integer vector in the column space of A. maxi controls
@@ -396,4 +396,10 @@ small_vector_in_image(A, maxi) := block([pA, output, i],
         output : output + rand_with_step(-maxi, maxi, 1) * col(pA, i)
         ),
     output
+);
+
+image_vector_and_preimage(A, maxi) := block([],
+    preim : rand_mx(matrix_size(A)[2], 1, maxi),
+    im : A . preim,
+    [im, preim]
 );
