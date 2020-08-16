@@ -7,6 +7,11 @@ functions are used - these won't work in an ordinary Maxima session.
 
 ## Methods
 
+### Number theory
+
+- `gcd_calc(a, b)` returns a LaTeX representation of a calculation of
+  gcd(a, b) using Euclid's algorithm.
+
 ### Permutations
 Methods for working with permutations of sets 1..N represented either as
 lists `[s(1),...,s(N)]` (i.e. as the bottom row of two-row notation) or
