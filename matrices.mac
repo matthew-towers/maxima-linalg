@@ -366,6 +366,14 @@ random_with_rank(m, n, r, maxi) := block([larger, smaller, li, z, rw, i, row_ord
     z
 );
 
+random_with_rank2(m, n, r) := block([i, z],
+    z : zeromatrix(m, n),
+    for i : 1 thru r do (
+        z[i][i] : 1
+        ),
+    random_slnz(m, 3) . z . random_slnz(n, 3)
+);
+
 /* multiply a rational matrix mx by the lcm of the denominators of its
  * entries, producing an integer matrix */
 clear_denoms(mx) := block([i, denoms],
@@ -376,6 +384,17 @@ clear_denoms(mx) := block([i, denoms],
             )
         ),
     lcm(denoms) * mx
+);
+
+/* factor out the gcd of the entries of an integer matrix */
+divide_out_gcd(mx) := block([i, j, entries_gcd],
+    entries_gcd : mx[1][1],
+    for i : 1 thru matrix_size(mx)[1] do (
+        for j : 1 thru matrix_size(mx)[2] do (
+            entries_gcd : gcd(entries_gcd, mx[i][j])
+        )
+    ),
+    (1 / entries_gcd) * mx
 );
 
 /* get an integer vector not in the column space of A. Assumes A is a
