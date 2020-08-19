@@ -165,39 +165,32 @@ rel(i, j, pn) := block([output, partno, pnlist],
     output
 );
 
-/* display relation corresponding to this partition of {1...n} in a table */
+/* display relation corresponding to this partition of {1...n} in an
+ * HTML table */
 set_pn_as_table(setpn, n) := block([output, i, rw, cl],
-    output : "\\begin{tabular}{l|",
+    output : "<table>",
+    /* make the top row */
+    output : sconcat(output, "<tr> <th style=\"border-width: 1px; border-style: solid;\"> </th> "),
     for i : 1 thru n do (
-        output : sconcat(output, "l")
-    ),
-    output : sconcat(output, "}"),
-    for rw : 1 thru n- 1 do (
-        for cl : 1 thru n-1 do (
+        output : sconcat(output, "<th style=\"border-width: 1px; border-style: solid;\">", i, "</th>")
+        ),
+    output : sconcat(output, " </tr> "),
+    /* make the rest of the rows */
+    for rw : 1 thru n do (
+        /* add the heading column entry */
+        output : sconcat(output, "<tr> <td style=\"border-width: 1px; border-style: solid;\"> <b>", rw, "</b> </td>"),
+        /* add the rest of the entries */
+        for cl : 1 thru n do (
             if rel(rw, cl, setpn) then (
-                output : sconcat(output, "x & ")
+                output : sconcat(output, "<td style=\"border-width: 1px; border-style: solid;\"> x </td>")
             ) else (
-                output : sconcat(output, " & ")    
+                output : sconcat(output, "<td style=\"border-width: 1px; border-style: solid;\"> </td>")
             )
         ),
-        if rel(rw, n, setpn) then (
-            output : sconcat(output, "x \\\\")
-        ) else (
-            output : sconcat(output, "  \\\\")
-        )
+        /* terminate the tr */
+        output : sconcat(output, "</tr> ")
     ),
-    /* now do the last row */
-    for cl : 1 thru n - 1 do (
-        if rel(n, cl, setpn) then (
-            output : sconcat(output, "x & ")
-        ) else (
-            output : sconcat(output, " & ")
-        )
-    ),
-    if rel(n, n, setpn) then (
-        output : sconcat(output, "x \\end{tabular}")
-    ) else (
-        output : sconcat(output, "\\end{tabular}")
-    ),
+    /* terminate the table */
+    output : sconcat(output, "</table>"),
     output
 );

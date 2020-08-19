@@ -75,7 +75,7 @@ corresponds to `[f(1), f(2), ..., f(M)]`.
 - `partitions(n, k)` returns the list of all partitions of n into at
   most k parts.
 - `rand_setpartition(n)` picks a set partition of 1..n at random.
-- `set_pn_as_table(p, n)` returns a LaTeX table with `n` rows and columns
+- `set_pn_as_table(p, n)` returns an HTML table with `n` labelled rows and columns
   and an x in row i and column j iff i and j are related under the
   equivalence relation on 1..n corresponding to the set partition `p` of
   1..n.
