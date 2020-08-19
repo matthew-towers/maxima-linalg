@@ -58,7 +58,7 @@ default in a STACK maxima installation.
 - `cyclesLaTeX(cycs)` produces a string consisting of a LaTeX
   representation of the list of disjoint cycles `cycs`
 
-### Functions
+### Functions and relations
 
 There are some methods for working with functions from 1..M to 1..N for
 some M and N. These are represented as lists of their values, so f
@@ -72,6 +72,13 @@ corresponds to `[f(1), f(2), ..., f(M)]`.
   list cod, otherwise false
 - `allInCod2(g, cod)` returns a number i such that g(i) is not an
   element of cod if such an i exists, otherwise 0.
+- `partitions(n, k)` returns the list of all partitions of n into at
+  most k parts.
+- `rand_setpartition(n)` picks a set partition of 1..n at random.
+- `set_pn_as_table(p, n)` returns a LaTeX table with `n` rows and columns
+  and an x in row i and column j iff i and j are related under the
+  equivalence relation on 1..n corresponding to the set partition `p` of
+  1..n.
 
 ### Matrices and vectors
 

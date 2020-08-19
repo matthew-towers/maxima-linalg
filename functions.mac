@@ -117,3 +117,87 @@ printfunc(fn, letter) := block([str, i],
     str : sconcat(str, letter, "(", length(fn), ") = ", fn[length(fn)]),
     str
 );
+
+/* partitions of n into at most k parts */
+partitions(n, k) := block([i, j, p, pn_of_n_minus_lp, largest_part, new_pn_of_n, output],
+    if (n = 0) then return([[]]),
+    if (n = 1) then return([[1]]),
+    output : [],
+    for largest_part : 1 thru min(k, n) do (
+        p : partitions(n - largest_part, min(k, largest_part)),
+        for j : 1 thru length(p) do (
+            pn_of_n_minus_lp : p[j],
+            new_pn_of_n : append(pn_of_n_minus_lp, [largest_part]),
+            output : append(output, [new_pn_of_n])
+            )
+        ),
+    output
+);
+
+/* random set partition of 1..n */
+rand_setpartition(n) := block([pns, pn, order, output, i, count, j, current_part, current_part_size],
+    pns : partitions(n, n),
+    pn : rand(pns),
+    order : rand_selection(makelist(i, i, 1, n), n),
+    output : {},
+    count : 1,
+    for i : 1 thru length(pn) do (
+        current_part_size : pn[i],
+        current_part : {},
+        for j : 1 thru current_part_size do (
+            current_part : union(current_part, {order[count]}),
+            count : count + 1
+            ),
+        output : union(output, {current_part})
+    ),
+    output
+);
+
+/* are i and j related in the equiv rel corresponding to this pn? */
+rel(i, j, pn) := block([output, partno, pnlist],
+    output : false,
+    pnlist : listify(pn),
+    for partno : 1 thru length(pnlist) do (
+        if (elementp(i, pnlist[partno]) and elementp(j, pnlist[partno])) then (
+            output : true
+        )
+    ),
+    output
+);
+
+/* display relation corresponding to this partition of {1...n} in a table */
+set_pn_as_table(setpn, n) := block([output, i, rw, cl],
+    output : "\\begin{tabular}{l|",
+    for i : 1 thru n do (
+        output : sconcat(output, "l")
+    ),
+    output : sconcat(output, "}"),
+    for rw : 1 thru n- 1 do (
+        for cl : 1 thru n-1 do (
+            if rel(rw, cl, setpn) then (
+                output : sconcat(output, "x & ")
+            ) else (
+                output : sconcat(output, " & ")    
+            )
+        ),
+        if rel(rw, n, setpn) then (
+            output : sconcat(output, "x \\\\")
+        ) else (
+            output : sconcat(output, "  \\\\")
+        )
+    ),
+    /* now do the last row */
+    for cl : 1 thru n - 1 do (
+        if rel(n, cl, setpn) then (
+            output : sconcat(output, "x & ")
+        ) else (
+            output : sconcat(output, " & ")
+        )
+    ),
+    if rel(n, n, setpn) then (
+        output : sconcat(output, "x \\end{tabular}")
+    ) else (
+        output : sconcat(output, "\\end{tabular}")
+    ),
+    output
+);

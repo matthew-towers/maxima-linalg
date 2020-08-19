@@ -359,7 +359,7 @@ random_with_rank(m, n, r, maxi) := block([larger, smaller, li, z, rw, i, row_ord
     /* fill the rest of z up with linear combinations of the rows
      * already added, guaranteeing the rank is exactly r
      */
-    for rw : r+1 thru smaller do (
+    for rw : r + 1 thru smaller do (
         z[row_order[rw]] : random_lc(r, li, 3)
         ),
     if (m > smaller) then (z : transpose(z)),
