@@ -1,9 +1,12 @@
 # maxima-linalg
 
-Code for working with functions, permutations, logic, matrices and subspaces in
-[Maxima](http://maxima.sourceforge.net/). The intended use is in 
-[STACK](https://www.ed.ac.uk/maths/stack) questions, so STACK random
-functions are used - these won't work in an ordinary Maxima session.
+Code for working with functions, relations, permutations, logic,
+matrices and subspaces in [Maxima](http://maxima.sourceforge.net/). The
+intended use is in [STACK](https://www.ed.ac.uk/maths/stack) questions,
+so STACK random functions are used - these won't work in an ordinary
+Maxima session. Either change the randomisation functions back to
+standard Maxima ones or follow [the STACK Maxima sandbox
+instructions](https://stack2.maths.ed.ac.uk/demo2018/question/type/stack/doc/doc.php/CAS/STACK-Maxima_sandbox.md).
 
 ## Methods
 
@@ -19,6 +22,7 @@ as lists of cycles, where the cycle `(a1,... an)` is represented as a
 list `[a1,...,an]`. There are built in maxima functions for working with
 permutations in the combinatorics package, but they're not enabled by
 default in a STACK maxima installation.
+
 - `cyclesTo2Row(cycs, N)` converts from a list of *disjoint* cycles to the two-row
   rep
 - `cyclesTo2Row2(cycs, N)` converts from a list of possibly non-disjoint cycles to the two-row rep
@@ -63,6 +67,7 @@ default in a STACK maxima installation.
 There are some methods for working with functions from 1..M to 1..N for
 some M and N. These are represented as lists of their values, so f
 corresponds to `[f(1), f(2), ..., f(M)]`.
+
 - `leftInv(f, N)` returns a left-inverse to the function f with codomain
   `1, 2, ..., N`. Assumes f is one-to-one.
 - `differentLeftInv(f, N)` returns a different left-inverse to the one
@@ -112,6 +117,7 @@ corresponds to `[f(1), f(2), ..., f(M)]`.
    rough control over how big the elements of the matrix are.
  
 There are functions for determining why a matrix is not in RREF:
+
  - `zeroRowsNotAllAtBottom(a)` returns `true` if there is a zero row
    with a nonzero row below it, otherwise `false`.
  - `nonOneLeadingEntry(a)` returns the coordinates of a leading entry

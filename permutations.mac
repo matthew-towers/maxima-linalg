@@ -139,7 +139,7 @@ nonneg_power_tworow(tworow, n) := foldr(makelist(tworow, i, 1, n), compose_tworo
 /* tworow^n, where n is an integer and tworow is the two-row rep of a
  * perm
  */
-power_tworow(tworow, n) := if n >= 0 then nonneg_power_tworow(tworow, n) else nonneg_power_tworow(inverseTwoRow(tworow), n);
+power_tworow(tworow, n) := if n >= 0 then nonneg_power_tworow(tworow, n) else nonneg_power_tworow(inverseTwoRow(tworow), -n);
 
 /* input: a cycle cyc. Output: a list of transpositions whose product is
  * cyc.
