@@ -192,3 +192,23 @@ cyclesLaTeX(cycs) := block([str, i],
 
 /* generate a random perm in 2-row notation */
 randomPerm(n) := rand_selection(makelist(i, i, 1, n), n);
+
+/* generate a random perm of 1..n which isn't the identity and doesn't have all
+ * cycles of length 2.  Assumes n>2 */
+randomPermWithOrderGreaterThanTwo(n) := block([k, cycleElts, output, i, leftovers, reordered_leftovers, count],
+    k : rand_with_step(3, n, 1), /* length of a cycle */
+    cycleElts : rand_selection(makelist(i, i, 1, n), k), /* elements in our k-cycle */
+    output : makelist(i, i, 1, n),
+    for i : 1 thru k - 1 do (
+        output[cycleElts[i]] : cycleElts[i+1]
+        ),
+    output[cycleElts[k]] : cycleElts[1], /* now output is the 2-row for the k-cycle cycleElts */
+    leftovers : listify(setdifference(setify(output), setify(cycleElts))), /* the elts of 1..n not in cycleElts */
+    reordered_leftovers : rand_selection(leftovers, n-k),
+    count : 0,
+    for i in leftovers do (
+        count : count + 1,
+        output[i] : reordered_leftovers[count]
+        ),
+    output
+); 

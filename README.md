@@ -61,6 +61,8 @@ default in a STACK maxima installation.
   representation of the two-row notation for `tworow`
 - `cyclesLaTeX(cycs)` produces a string consisting of a LaTeX
   representation of the list of disjoint cycles `cycs`
+- `randomPermWithOrderGreaterThanTwo(n)` returns a random permutation of
+  {1,...,n} in two-row notation which doesn't have order 1 or 2.
 
 ### Functions and relations
 
