@@ -30,7 +30,7 @@ default in a STACK maxima installation.
   permutation of 1..N
 - `id_tworow(N)` returns the two-row rep of the identity permutation on
   1..N
-- `foldr(list, fn, default)` is right fold
+- `foldr(list, fn, default)` is [right fold](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
 - `twoRowToCycles(tworow)` converts from two-row to disjoint-cycle reps
 - `disjointCyclesp(cycs)` checks if the cycles in the list cycs are
   disjoint
@@ -150,10 +150,13 @@ matrices named in lower case are just matrices.
 
 ### Logic
 
-- `log_equiv(ex, fn, vars)` ex is assumed to be a logical expression in
-  the variables in the list vars only, and fn is a boolean function with
-  arity the length of vars. Returns a list `[is_equiv, counterexamples]`
-  where `is_equiv` is a boolean which is true iff `ex` is logically
-  equivalent to `fn` and `counterexamples` is a list of the truth
-  assignments to `vars` that witness the failure of `ex` to be logically
-  equivalent to `fn`
+- `log_equiv(ex, fn, vars)`. Let `ex` be a boolean expression in the list
+  `vars` of variables and `fn` be a boolean function of `length(vars)`
+  boolean variables. Under a truth assignment to `vars`, does `ex`
+  always have the same truth value as `fn(vars[1], vars[2], ...)`? If so
+  returns `[true, []]`, otherwise returns a list containing `false` then
+  a list of counterexamples, each counterexample being a list of truth
+  values for `vars`.
+- `log_eq(ex1, ex2)` is like `log_equiv` except it takes two
+  expressions. Care is needed in interpreting the output if `ex1` and
+  `ex2` involve different variables, read the code.

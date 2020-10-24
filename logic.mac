@@ -19,24 +19,49 @@ subst_list(varlist, vallist) := block([out, i],
     out
 );
 
-/* given a boolean function fn of n vars and an expr ex1 in the
- * variables vars, does the expression induce the same boolean function?
- * return [true or false, list of counterexamples]
+/* given a list of variables vars = [p, q, r, ...] and a
+ * boolean function fn = fn(p, q, r, ... ) of n variables and an expr ex
+ * in those variables, does the expression induce the same boolean
+ * function?  return [true or false, list of counterexamples]
  */
-log_equiv(ex, fn, vars) := block([is_equiv, counterex, n, tfs, i, subs],
+log_equiv(ex, fn, vars) := block([is_equiv, counterex, n, tfs, subs],
     is_equiv : true,
     counterex : [],
     n : length(vars),
     tfs : tf(n),
-    for i : 1 thru length(tf(n)) do (
+    for assignment in tfs do (
         /* build the substitution */
-        subs : subst_list(vars, tfs[i]),
+        subs : subst_list(vars, assignment),
         /* do the substitution */
         bool : subst(subs, ex),
-        if not is(bool = apply(fn, tfs[i])) then (
-            /* they are not logically equiv, and tfs[i] witnesses this */
+        if not is(bool = apply(fn, assignment)) then (
+            /* they are not logically equiv, and assignment witnesses this */
             is_equiv : false,
-            counterex : cons(tfs[i], counterex)
+            counterex : cons(assignment, counterex)
+        ) 
+    ),
+    [is_equiv, counterex]
+);
+
+/* like log_equiv but for two expressions in the same set of variables */
+log_eq(ex1, ex2) := block([vars1, vars2, is_equiv, counterex, n, tfs, subs],
+    vars1 : listofvars(ex1),
+    vars2 : listofvars(ex2),
+    vars : listify(setify(append(vars1, vars2))),
+    is_equiv : true,
+    counterex : [],
+    n : length(vars),
+    tfs : tf(n),
+    for assignment in tfs do ( 
+        /* build the substitution */
+        subs : subst_list(vars, assignment),
+        /* do the substitution */
+        bool1 : subst(subs, ex1),
+        bool2 : subst(subs, ex2),
+        if not is(bool1 = bool2) then (
+            /* they are not logically equiv, and assignment witnesses this */
+            is_equiv : false,
+            counterex : cons(assignment, counterex)
         ) 
     ),
     [is_equiv, counterex]

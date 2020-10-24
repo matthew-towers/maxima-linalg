@@ -246,7 +246,6 @@ inn(v, a) := is(rank(a) = rank(addcol(v,a)));
 rpm(n) := block([z, l, p, i], 
     z : zeromatrix(n,n),
     l : makelist(i,i,1,n),
-    /* p : random_permutation(l), */
     p : rand_selection(l, n),
     for i : 1 thru n do 
         z[i][p[i]] : 1,
@@ -258,8 +257,7 @@ random_lut_mx(n, maxi) := block([id, i, j],
     id : ident(n),
     for i : 2 thru n do (
         for j : 1 thru i-1 do (
-            /* id[i][j] : random(maxi + 1) * (-1)^random(2) */
-            id[i][j] : rand(maxi + 1) * (-1) ** rand(2)
+            id[i][j] : rand_with_step(-maxi, maxi, 1)
             )
         ),
     id
