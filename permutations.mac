@@ -26,7 +26,7 @@ cycleTo2Row(cycle, N) := block([output, i],
     for i : 1 thru length(cycle) - 1 do(
         output[cycle[i]] : cycle[i + 1]
         ),
-    output[last(cycle)] : first(cycle),
+    if length(cycle) > 0 then output[last(cycle)] : first(cycle),
     output
 );
 
