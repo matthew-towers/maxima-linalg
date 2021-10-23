@@ -106,7 +106,8 @@ why_not_rref(mx) := block([mzr, whynot, ble, badLEcol, blep],
     if mzr then whynot : sconcat(whynot, "<li>Your matrix has a row of zeroes which is not at the bottom. Any zero rows of a RREF matrix must be at the bottom. </li>"),
 
     ble : nonOneLeadingEntry(mx),
-    if not (is(ble = [-1, -1])) then whynot : sconcat(whynot, "<li>Your matrix has a leading entry at position ", bad_leading_entry[1], ", ", bad_leading_entry[2], " which isn't equal to 1. In a RREF matrix all leading entries must be 1. </li>"),
+    if not (is(ble = [-1, -1])) then whynot : sconcat(whynot, "<li>Your
+matrix has a leading entry at position ", ble[1], ", ", ble[2], " which isn't equal to 1. In a RREF matrix all leading entries must be 1. </li>"),
 
     badLEcol : nonZeroEntryInColumnOfLeadingEntry(mx),
     if not is(badLEcol = [-1, -1]) then whynot : sconcat(whynot, "<li>Your matrix has a leading entry in position ", badLEcol[1], ", ", badLEcol[2], " and there is another nonzero entry in the same column. In a RREF matrix, if a column contains a leading entry, every other entry in that column must be zero. </li>"),
