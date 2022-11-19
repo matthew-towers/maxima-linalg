@@ -52,7 +52,7 @@ nonZeroEntryInColumnOfLeadingEntry(a) := block([height,output, i, ii, c],
 );
 
 /* return [i, j] such that i < j and the leading entry in row j is 
- * to the left of the leading entry in row i, if such a pair
+ * not to the right of the leading entry in row i, if such a pair
  * exists, otherwise return [-1, -1] */
 
 badLeadingEntryPositions(a) := block([height, i, c, ii, output, cc],
@@ -61,9 +61,9 @@ badLeadingEntryPositions(a) := block([height, i, c, ii, output, cc],
     for i thru (height - 1) do (
         c : columnOfLeadingEntry(a, i),
         if not is(c = -1) then (
-            for ii : (i + 1) while ii <= height do (
+            for ii : (i + 1) thru height do (
                 cc : columnOfLeadingEntry(a, ii),
-                if (not is(cc = -1) and (cc < c)) then
+                if ((not is(cc = -1)) and (cc <= c)) then
                     (output : [i, ii], return())))),
     output
     );
