@@ -1,5 +1,6 @@
 /* vim: ft=maxima
 */
+
 /* does the matrix have an all-zero row? Return the index of the highest
  * one if it exists, and -1 if there's no zero row */
 
@@ -134,16 +135,25 @@ iszeromx(a) := is(a = zeromatrix(matrix_size(a)[1], matrix_size(a)[2]));
 isevec(v,a) :=  not(iszeromx(v)) and is(rank(addcol(v, a.v)) = 1); 
 
 
-/* row ops */
+/* row ops and elementary matrices */
 
-/* lij(a,l,i,j) adds l times row i to row j of a */
+/* lij(a,l,i,j) adds l times row i to row j of a, modifying a in place */
 lij(a, l, i, j) := block(a[j] : l* a[i] + a[j]);
+/* corresponding nxn elementary matrix */
+e(i, j, l, n) := block([a], a : ident(n),  lij(a, l, i, j), a);
 
-/* sw(a,i,j) swaps rows i and j of a */
-sw(a,i,j) := block(temp : a[i], a[i] : a[j], a[j] : temp);
+/* sw(a,i,j) swaps rows i and j of a, modifying a in place */
+sw(a, i, j) := block(temp : a[i], a[i] : a[j], a[j] : temp);
+/* corresponding nxn elementary matrix */
+p(i, j, n) := block([a], a : ident(n), sw(a, i, j), a);
 
-/* mu(a,i,l) multiplies row i of a by l */
-mu(a,i,l) := block(a[i] : l * a[i]);
+/* mu(a,i,l) multiplies row i of a by l, modifying a in place */
+mu(a, i, l) := block(a[i] : l * a[i]);
+/* corresponding nxn elementary matrix */
+delta(i, l, n) := block([a], a : ident(n), mu(a, i, l), a);
+
+
+/* linear algebra */
 
 /* isLI(v1, v2, ...) is true if the vectors vi are linearly independent,
  * otherwise false */
