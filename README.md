@@ -93,36 +93,42 @@ corresponds to `[f(1), f(2), ..., f(M)]`.
 
 ### Matrices and vectors
 
- - `columnOfLeadingEntry(a, i)` returns the column of `a` in which the left-most nonzero entry of row `i` appears if this exists, otherwise -1.
+ - `columnOfLeadingEntry(a, i)` returns the column of `a` in which the left-most
+   nonzero entry of row `i` appears if this exists, otherwise -1.
  - `rref(a)` returns the row reduced echelon form of `a`.
  - `isrref(a)` is true iff `a` is in row reduced echelon form.
  - `isdiag(a)` is true iff `a` is diagonal.
- - Row operations: `lij(a, l, i, j)` adds `l` times row `i` to row `j`, `sw(a, i, j)` swaps rows `i` and `j`, `mu(a, i, l)` multiplies row `i` by `l`.
+ - Row operations: `lij(a, l, i, j)` adds `l` times row `i` to row `j`, `sw(a,
+   i, j)` swaps rows `i` and `j`, `mu(a, i, l)` multiplies row `i` by `l`.
  - `isLI(v1, v2, ...)` is true iff `v1, v2,...` are linearly independent.
  - `iszeromx(a)` is true iff `a` has all entries zero.
- - `isevec(v, a)` is true iff `v` is an eigenvector of `a`. Assumes `a . v` makes sense and has the same size as `v`.
+ - `isevec(v, a)` is true iff `v` is an eigenvector of `a`. Assumes `a . v`
+   makes sense and has the same size as `v`.
  - `rpm(n)` returns a random permutation matrix of size n
- - `random_lut_mx(n, maxi)` returns a lower unitriangular matrix with
-   entries randomly chosen between `-maxi` and `maxi` inclusive
- - `random_slnz(n, maxi)` returns a random integer nxn matrix with
-   determinant 1 formed by `random_lut_mx(n, maxi) . rpm(n) . random_lut_mx(n, maxi)`
+ - `random_lut_mx(n, maxi)` returns an `n` by `n` lower unitriangular matrix
+   with entries randomly chosen between `-maxi` and `maxi` inclusive
+ - `random_lt_mx(n, maxi)`, `random_ut_mx(n, maxi)` random `n` by `n` lower and
+   upper triangular matrices with entries randomly chosen between `-maxi` and
+   `maxi` inclusive.
+ - `random_slnz(n, maxi)` returns a random integer nxn matrix with determinant 1
+   formed by `random_lut_mx(n, maxi) . rpm(n) . random_lut_mx(n, maxi)`
  - `rand_mx_distinct(nrows, ncols)` returns a `nrows` by `ncols` matrix with
    randomly chosen distinct entries.
  - `rand_mx(nrows, ncols, a)` returns a `nrows` by `ncols` matrix with
    random integer entries between `-a` and `a`
  - `work_out_product_entry(A, B, i, j)` returns a LaTeX string showing
    the calculation of the i, j entry of AB.
- - `small_vector_in_image(A, maxi)` returns a vector in the column space
-   of the matrix `A`, with `maxi` controlling how big its entries are.
- - `vector_not_in_image(A)` returns a vector not in the column space of
-   `A`.
+ - `small_vector_in_image(A, maxi)` returns a vector in the column space of the
+   matrix `A`, with `maxi` controlling how big its entries are.
+ - `vector_not_in_image(A)` returns a vector not in the column space of `A`.
  - `clear_denoms(mx)` multiplies a rational matrix by the lowest common multiple
    of its entries.
  - `random_with_rank(m, n, r, maxi)` returns a random `m` by `n` integer matrix
    with rank `r` (assuming `r` is at most the minimum of `m` and `n`). `maxi`
    gives rough control over how big the elements of the matrix are.
  
-There are functions for determining why a matrix is not in RREF:
+Functions for determining why a matrix is not in row reduced echelon
+form:
 
  - `zeroRowsNotAllAtBottom(a)` returns `true` if there is a zero row
    with a nonzero row below it, otherwise `false`.
