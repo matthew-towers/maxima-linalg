@@ -1,12 +1,14 @@
 # maxima-linalg
 
-Code for working with functions, relations, permutations, logic,
-matrices and subspaces in [Maxima](http://maxima.sourceforge.net/). The
-intended use is in [STACK](https://www.ed.ac.uk/maths/stack) questions,
-so STACK random functions are used - these won't work in an ordinary
-Maxima session. Either change the randomisation functions back to
-standard Maxima ones or follow [the STACK Maxima sandbox
+Code for working with functions, relations, permutations, logic, matrices and
+subspaces in [Maxima](http://maxima.sourceforge.net/). The intended use is in
+[STACK](https://www.ed.ac.uk/maths/stack) questions, so STACK random functions
+are used - these won't work in an ordinary Maxima session. Either change the
+randomisation functions back to standard Maxima ones or follow [the STACK Maxima
+sandbox
 instructions](https://stack2.maths.ed.ac.uk/demo2018/question/type/stack/doc/doc.php/CAS/STACK-Maxima_sandbox.md).
+
+[Link to the STACK Maxima docs](https://docs.stack-assessment.org/en/CAS/)
 
 ## Methods
 
@@ -16,6 +18,7 @@ instructions](https://stack2.maths.ed.ac.uk/demo2018/question/type/stack/doc/doc
   gcd(a, b) using Euclid's algorithm.
 
 ### Permutations
+
 Methods for working with permutations of sets 1..N represented either as
 lists `[s(1),...,s(N)]` (i.e. as the bottom row of two-row notation) or
 as lists of cycles, where the cycle `(a1,... an)` is represented as a
@@ -25,35 +28,36 @@ default in a STACK maxima installation.
 
 - `cyclesTo2Row(cycs, N)` converts from a list of *disjoint* cycles to the two-row
   rep
-- `cyclesTo2Row2(cycs, N)` converts from a list of possibly non-disjoint cycles to the two-row rep
+- `cyclesTo2Row2(cycs, N)` converts from a list of possibly non-disjoint cycles
+  to the two-row rep
 - `cycleTo2Row(cycle, N)` converts a cycle to its two-row rep as a
   permutation of 1..N
 - `id_tworow(N)` returns the two-row rep of the identity permutation on
   1..N
 - `foldr(list, fn, default)` is [right fold](https://en.wikipedia.org/wiki/Fold_(higher-order_function))
 - `twoRowToCycles(tworow)` converts from two-row to disjoint-cycle reps
-- `disjointCyclesp(cycs)` checks if the cycles in the list cycs are
+- `disjointCyclesp(cycs)` checks if the cycles in the list `cycs` are
   disjoint
-- `cyclep(li, N)` checks if li is legitimate cycle on 1..N
-- `permAsCycsp(li, N)` checks if li is a list of legitimate cycles on
+- `cyclep(li, N)` checks if `li` is legitimate cycle on 1..N
+- `permAsCycsp(li, N)` checks if `li` is a list of legitimate cycles on
   1..N
 - `order_dj_cycs(cycs)` returns the order of the permutation represented
-  by the list of *disjoint* cycles cycs
-- `order_tworow(tworow)` returns the order of the permutation tworow
+  by the list of *disjoint* cycles `cycs`
+- `order_tworow(tworow)` returns the order of the permutation `tworow`
   given in two-row form
 - `inverseCycles(cycs)` returns the inverse of the permutation
-  represented by the list of possibly non-disjoint cycles cycs, again in
+  represented by the list of possibly non-disjoint cycles `cycs`, again in
   cycle form
 - `sgn_cycles(cycs)` returns the sign of the permutation represented by
-  the list of possibly non-disjoint cycles cycs
-- `sgn_tworow(tworow)` returns the sign of the permutation tworow given in
+  the list of possibly non-disjoint cycles `cycs`
+- `sgn_tworow(tworow)` returns the sign of the permutation `tworow` given in
   two-row notation
-- `compose_tworow(tr1, tr2)` composes the two permutations tr1 and tr2
+- `compose_tworow(tr1, tr2)` composes the two permutations `tr1` and `tr2`
   given in two-row form
-- `compose_cycs(c1, c2, N)` composes the two permutations c1 and c2 of
+- `compose_cycs(c1, c2, N)` composes the two permutations `c1` and `c2` of
   1..N given as lists of possibly non-disjoint cycles
-- `power_tworow(tworow, n)` returns the nth power of the permutation
-  tworow in two-row form, for integer n
+- `power_tworow(p, n)` returns the `n`th power of the permutation
+  `p` in two-row form, for integer n
 - `cycles_to_transpositiosn(cycs)` converts a list of possibly
   non-disjoint cycles to a list of transpositions whose product is the
   same as the product of the original list
@@ -76,7 +80,7 @@ corresponds to `[f(1), f(2), ..., f(M)]`.
   found by `leftInv`, assuming that N is larger than M
 - `whyNotLinv(f, g, N)` returns a number such that g(f(i)) is not i, or 0 if no such number exists.
 - `allInCod(g, cod)` returns true if the image of g is contained in the
-  list cod, otherwise false
+  list `cod`, otherwise false
 - `allInCod2(g, cod)` returns a number i such that g(i) is not an
   element of cod if such an i exists, otherwise 0.
 - `partitions(n, k)` returns the list of all partitions of n into at
@@ -102,9 +106,9 @@ corresponds to `[f(1), f(2), ..., f(M)]`.
    entries randomly chosen between `-maxi` and `maxi` inclusive
  - `random_slnz(n, maxi)` returns a random integer nxn matrix with
    determinant 1 formed by `random_lut_mx(n, maxi) . rpm(n) . random_lut_mx(n, maxi)`
- - `rand_mx_distinct(nrows, ncols)` returns a nrows by ncols matrix with
+ - `rand_mx_distinct(nrows, ncols)` returns a `nrows` by `ncols` matrix with
    randomly chosen distinct entries.
- - `rand_mx(nrows, ncols, a)` returns a nrows by ncols matrix with
+ - `rand_mx(nrows, ncols, a)` returns a `nrows` by `ncols` matrix with
    random integer entries between `-a` and `a`
  - `work_out_product_entry(A, B, i, j)` returns a LaTeX string showing
    the calculation of the i, j entry of AB.
@@ -112,11 +116,11 @@ corresponds to `[f(1), f(2), ..., f(M)]`.
    of the matrix `A`, with `maxi` controlling how big its entries are.
  - `vector_not_in_image(A)` returns a vector not in the column space of
    `A`.
- - `clear_denoms(mx)` multiplies a rational matrix by the lcm of its
-   entries.
- - `random_with_rank(m, n, r, maxi)` returns a random m by n integer matrix with
-   rank r (assuming r is at most the minimum of m and n). `maxi` gives
-   rough control over how big the elements of the matrix are.
+ - `clear_denoms(mx)` multiplies a rational matrix by the lowest common multiple
+   of its entries.
+ - `random_with_rank(m, n, r, maxi)` returns a random `m` by `n` integer matrix
+   with rank `r` (assuming `r` is at most the minimum of `m` and `n`). `maxi`
+   gives rough control over how big the elements of the matrix are.
  
 There are functions for determining why a matrix is not in RREF:
 

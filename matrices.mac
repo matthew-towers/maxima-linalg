@@ -1,5 +1,8 @@
 /* vim: ft=maxima
+* Load this file in Maxima with
+* load("matrices.mac");
 */
+
 
 /* does the matrix have an all-zero row? Return the index of the highest
  * one if it exists, and -1 if there's no zero row */
@@ -263,6 +266,17 @@ rpm(n) := block([z, l, p, i],
     z
 );
 
+/* random matrix with integer entries in range */
+rand_mx(nrows, ncols, a) := block([z, i, j],
+    z : zeromatrix(nrows, ncols),
+    for i : 1 thru nrows do (
+        for j : 1 thru ncols do (
+            z[i][j] : rand(2*a)-a
+            )
+        ),
+    z
+);
+
 /* random lower unitriangular matrix with entries in -maxi...maxi */
 random_lut_mx(n, maxi) := block([id, i, j],
     id : ident(n),
@@ -274,16 +288,29 @@ random_lut_mx(n, maxi) := block([id, i, j],
     id
 );
 
+/* random lower triangular matrix with entries in -maxi...maxi */
+random_lt_mx(n, maxi) := block([z, i, j],
+    z : zeromatrix(n, n),
+    for i : 1 thru n do (
+        for j : 1 thru i do (
+            z[i][j] : rand_with_step(-maxi, maxi, 1)
+            )
+        ),
+    z
+);
+
+/* random upper triangular matrix with entries in -maxi...maxi */
+random_ut_mx(n, maxi) := transpose(random_lt_mx(n, maxi));
+
 /* random element of SL_n(Z) */
 random_slnz(n, maxi) := random_lut_mx(n, maxi) . rpm(n) . random_lut_mx(n, maxi);
 
 /* random mx of given size with integer entries from -a..a */
-rand_mx(nrows, ncols, a) := block([entries, z, i, j],
-    entries : makelist(i, i, -a, a),
+rand_mx(nrows, ncols, a) := block([z, i, j],
     z : zeromatrix(nrows, ncols),
     for i : 1 thru nrows do (
         for j : 1 thru ncols do (
-            z[i][j] : rand(entries)
+            z[i][j] : rand(2*a)-a
             )
         ),
     z
