@@ -270,7 +270,18 @@ rand_mx(nrows, ncols, a) := block([z, i, j],
     z : zeromatrix(nrows, ncols),
     for i : 1 thru nrows do (
         for j : 1 thru ncols do (
-            z[i][j] : random(2*a)-a
+            z[i][j] : rand(2*a)-a
+            )
+        ),
+    z
+);
+
+/* random gaussian integer matrix with entries in range */
+rand_complex_mx(nrows, ncols, a) := block([z, i, j],
+    z : zeromatrix(nrows, ncols),
+    for i : 1 thru nrows do (
+        for j : 1 thru ncols do (
+            z[i][j] : rand(2 * a) - a + (rand(2 * a) - a) * %i
             )
         ),
     z
