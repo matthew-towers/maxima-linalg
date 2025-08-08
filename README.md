@@ -130,12 +130,12 @@ corresponds to `[f(1), f(2), ..., f(M)]`.
    gives rough control over how big the elements of the matrix are.
  - `cross(u, v)` returns the cross product of the height 3 column vectors `u`
    and `v`.
- - `orthogonal_triple(a, b, k)` generates orthogonal triples of height 3 column
-   vectors with integer entries of the form $(p q r)^T, (q, r, p)^T, (r, p,
+ - `orthogonal_triple(a, b, k)` generates all orthogonal triples of height 3
+   column
+   vectors with integer entries of the form $(p, q, r)^T, (q, r, p)^T, (r, p,
    q)^T$. `a` and `b` should be coprime integers and `k` should be 1 or -1.
    This and the other orthogonal/orthonormal basis functions are derived from
-   Osborne and Liebeck's paper *Orthogonal Bases of $\mathbb{R}^3$ with
-   Integer Coordinates and Integer Lengths*.
+   Osborne and Liebeck's paper *Orthogonal Bases of* $\mathbb{R}^3$ *with Integer Coordinates and Integer Lengths*.
  - `orthonormal_triple(a, b, k)` produces a rational orthonormal basis of
    $\mathbb{R}^3$ obtained by scaling the output of `orthonormal_triple`.
    Same restrictions on `a`, `b`, and `k` as that function.
@@ -162,18 +162,16 @@ form:
 
 ### Vector space functions
 
-Subspaces U are represented by matrices whose column space is U. A good
-convention is that matrices named with capitals represent subspaces and
-matrices named in lower case are just matrices.
+Subspaces U are represented by matrices whose column space is U.
 
  - `dim` is an alias for the maxima command `rank`.
  - `equal_subspaces(A, B)` is true iff `A` and `B` represent the same
-   subspace.
- - `proj(a)` is orthogonal projection onto the column space of `a`.
- - `kerMX(a)` represents the kernel of the matrix `a`.
+   subspace, that is, iff they have the same column space.
+ - `proj(A)` is orthogonal projection onto the column space of `A`.
+ - `kerMX(A)` represents the kernel of the matrix `A`.
  - `sum_subspaces(A, B)` represents the subspace sum.
- - `intersect_subspaces(A, B)` represents `A ∩ B`.
- - `inn(v, A)` is true iff `v` is in (the subspace rep by) `A`.
+ - `intersect_subspaces(A, B)` represents $A \cap B$.
+ - `inn(v, A)` is true iff `v` is in the subspace spanned by the columns of `A`.
 
 ### Logic
 
