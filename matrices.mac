@@ -265,7 +265,7 @@ rpm(n) := block([z, l, p, i],
     z
 );
 
-/* random matrix with integer entries in range */
+/* random mx of given size with integer entries from -a..a */
 rand_mx(nrows, ncols, a) := block([z, i, j],
     z : zeromatrix(nrows, ncols),
     for i : 1 thru nrows do (
@@ -315,16 +315,6 @@ random_ut_mx(n, maxi) := transpose(random_lt_mx(n, maxi));
 /* random element of SL_n(Z) */
 random_slnz(n, maxi) := random_lut_mx(n, maxi) . rpm(n) . random_lut_mx(n, maxi);
 
-/* random mx of given size with integer entries from -a..a */
-rand_mx(nrows, ncols, a) := block([z, i, j],
-    z : zeromatrix(nrows, ncols),
-    for i : 1 thru nrows do (
-        for j : 1 thru ncols do (
-            z[i][j] : rand(2*a)-a
-            )
-        ),
-    z
-);
 
 /* random mx of given size with all entries distinct */
 rand_mx_distinct(nrows, ncols) := block([count, entries, z, i, j],
@@ -442,7 +432,7 @@ divide_out_gcd(mx) := block([i, j, entries_gcd],
             entries_gcd : gcd(entries_gcd, mx[i][j])
         )
     ),
-    (1 / entries_gcd) * mx
+    mx / entries_gcd
 );
 
 /* get an integer vector not in the column space of A. Assumes A is a
@@ -483,7 +473,7 @@ cross(u, v) := matrix([u[2][1] * v[3][1] - v[2][1] * u[3][1]],
  * Returns: orthogonal triple of integer vectors the gcds of whose entries are
  * 1. The length of each vector is |p + q + r|
  */
-orthog_triple(a, b, k) := block([p, q, r, u, v, w],
+orthogonal_triple(a, b, k) := block([p, q, r, u, v, w],
   p : a * (a + b) * k,
   q : b * (a + b) * k,
   r : -a * b * k,
@@ -536,4 +526,5 @@ general_orthogonal_triple(a, b, c, x, y, z) := block([p, q, r, g, l, u, s, lamb,
   g : ezgcd(cp[1][1], cp[2][1], cp[3][1])[1],
   [u, s, cp/g]
 );
+
 

@@ -116,6 +116,8 @@ corresponds to `[f(1), f(2), ..., f(M)]`.
    randomly chosen distinct entries.
  - `rand_mx(nrows, ncols, a)` returns a `nrows` by `ncols` matrix with
    random integer entries between `-a` and `a`
+ - `rand_complex_mx(nrows, ncols, a)` returns a `nrows` by `ncols` matrix with
+   random Gaussian integer entries between `-a` and `a`
  - `work_out_product_entry(A, B, i, j)` returns a LaTeX string showing
    the calculation of the i, j entry of AB.
  - `small_vector_in_image(A, maxi)` returns a vector in the column space of the
@@ -126,6 +128,21 @@ corresponds to `[f(1), f(2), ..., f(M)]`.
  - `random_with_rank(m, n, r, maxi)` returns a random `m` by `n` integer matrix
    with rank `r` (assuming `r` is at most the minimum of `m` and `n`). `maxi`
    gives rough control over how big the elements of the matrix are.
+ - `cross(u, v)` returns the cross product of the height 3 column vectors `u`
+   and `v`.
+ - `orthogonal_triple(a, b, k)` generates orthogonal triples of height 3 column
+   vectors with integer entries of the form $(p q r)^T, (q, r, p)^T, (r, p,
+   q)^T$. `a` and `b` should be coprime integers and `k` should be 1 or -1.
+   This and the other orthogonal/orthonormal basis functions are derived from
+   Osborne and Liebeck's paper *Orthogonal Bases of $\mathbb{R}^3$ with
+   Integer Coordinates and Integer Lengths*.
+ - `orthonormal_triple(a, b, k)` produces a rational orthonormal basis of
+   $\mathbb{R}^3$ obtained by scaling the output of `orthonormal_triple`.
+   Same restrictions on `a`, `b`, and `k` as that function.
+ - `general_orthogonal_triple(a, b, c, x, y, z)` can generate any orthogonal
+   triple with integer coordinates and integer lengths. The conditions are that
+   `a`, `b`, and `c` must be integers with greatest common divisor 1 and $|x|,
+   |y|, z$ must be a Pythagorean triple with $z > 0$.
  
 Functions for determining why a matrix is not in row reduced echelon
 form:
