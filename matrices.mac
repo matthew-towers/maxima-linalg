@@ -421,7 +421,9 @@ random_with_rank2(m, n, r) := block([i, z],
 );
 
 /* multiply a rational matrix mx by the lcm of the denominators of its
- * entries, producing an integer matrix */
+ * entries, producing an integer matrix. Use load("functs") for lcm in vanilla
+ * Maxima
+ */
 clear_denoms(mx) := block([i, denoms],
     denoms : [],
     for i : 1 thru matrix_size(mx)[1] do (
@@ -468,3 +470,70 @@ image_vector_and_preimage(A, maxi) := block([],
     im : A . preim,
     [im, preim]
 );
+
+/* cross product. This is in the vect package as ~
+ */
+cross(u, v) := matrix([u[2][1] * v[3][1] - v[2][1] * u[3][1]],
+                      [v[1][1] * u[3][1] - u[1][1] * v[3][1]],
+                      [u[1][1] * v[2][1] - v[1][1] * u[2][1]]);
+
+/* Generate orthogonal triples in R3 of a special form. Theorem 2 of Osborne and
+ * Liebeck *Orthogonal Bases of R3 with Integer Coordinates and Integer Lengths*
+ * Conditions: a, b integers with gcd(a, b) = 1. k = \pm 1
+ * Returns: orthogonal triple of integer vectors the gcds of whose entries are
+ * 1. The length of each vector is |p + q + r|
+ */
+orthog_triple(a, b, k) := block([p, q, r, u, v, w],
+  p : a * (a + b) * k,
+  q : b * (a + b) * k,
+  r : -a * b * k,
+  u : matrix([p], [q], [r]),
+  v : matrix([q], [r], [p]),
+  w : matrix([r], [p], [q]),
+  [u, v, w]
+);
+
+/* version of orthog_triple scaled to produce rational orthonormal bases of R3
+ * */
+orthonormal_triple(a, b, k) := block([p, q, r, u, v, w, l],
+  p : a * (a + b) * k,
+  q : b * (a + b) * k,
+  r : -a * b * k,
+  u : matrix([p], [q], [r]),
+  v : matrix([q], [r], [p]),
+  w : matrix([r], [p], [q]),
+  l : abs(p + q + r),
+  [u/l, v/l, w/l]
+);
+
+/* General construction of orthogonal triples with integer coordinates and
+ * integer lengths, from Osborne and Liebeck p.51 onwards.
+ * Conditions: a, b, c integers such that gcd(a, b, c) = 1. x, y, z such that
+ * |x|, |y|, z is a Pythagorean triple of integers with z > 0
+ * Example (a) on p.53 is recreated with general_orthogonal_triple(4, 7, 13, 3, -4, 5);
+ * and by the same call with -4 replaced by 4.
+ */
+general_orthogonal_triple(a, b, c, x, y, z) := block([p, q, r, g, l, u, s, lamb, mu, cp],
+  p : 2 * a * c,
+  q : 2 * b * c,
+  r : -a^2 - b^2 + c^2,
+  l : a^2 + b^2 + c^2, 
+  g : ezgcd(p, q, r)[1],
+  p : p / g,
+  q : q / g,
+  r : r / g,
+  l : l / g,
+  u : matrix([p], [q], [r]),
+  if (r = 0) then
+    s : matrix([-q], [p], [0])
+  else (
+    lamb : (z * p + y * l) / (z * r),
+    mu : (z * q - x * l) / (z * r),
+    s_star : matrix([2 * lamb], [2 * mu], [1 - lamb^2 - mu^2]),
+    s : clear_denoms(s_star)
+    ),
+  cp : cross(u, s),
+  g : ezgcd(cp[1][1], cp[2][1], cp[3][1])[1],
+  [u, s, cp/g]
+);
+
