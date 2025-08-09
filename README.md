@@ -143,6 +143,10 @@ corresponds to `[f(1), f(2), ..., f(M)]`.
    triple with integer coordinates and integer lengths. The conditions are that
    `a`, `b`, and `c` must be integers with greatest common divisor 1 and $|x|,
    |y|, z$ must be a Pythagorean triple with $z > 0$.
+ - `general_orthogonal_triple(a, b, c, x, y, z)` version of the function above
+   with the output vectors scaled so as to be an orthonormal basis
+ - `pythag_triple(m, n)` generates Pythagorean triples using Euclid's formula.
+   Requires `m > n > 0`.
  
 Functions for determining why a matrix is not in row reduced echelon
 form:

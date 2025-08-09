@@ -496,6 +496,13 @@ orthonormal_triple(a, b, k) := block([p, q, r, u, v, w, l],
   [u/l, v/l, w/l]
 );
 
+/* Generate a Pythagorean triple using Euclid's formula. Not all Pythagorean
+ * triples can be constructed this way.
+ * Conditions: m > n > 0 whole numbers.
+ * */
+
+pythag_triple(m, n) := [m^2 - n^2, 2 * m * n, m^2 + n^2];
+
 /* General construction of orthogonal triples with integer coordinates and
  * integer lengths, from Osborne and Liebeck p.51 onwards.
  * Conditions: a, b, c integers such that gcd(a, b, c) = 1. x, y, z such that
@@ -527,4 +534,7 @@ general_orthogonal_triple(a, b, c, x, y, z) := block([p, q, r, g, l, u, s, lamb,
   [u, s, cp/g]
 );
 
-
+general_orthonormal_triple(a, b, c, x, y, z) := block([t], 
+  t : general_orthogonal_triple(a, b, c, x, y, z),
+  [t[1]/sqrt(t[1].t[1]), t[2]/sqrt(t[2].t[2]), t[3]/sqrt(t[3].t[3])]
+);
